@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/user
+    username: postgres
+    password: password
+
+flyway:
+  user: postgres
+  password: postgres
+  schemas: password
+  url: jdbc:postgresql://db:5432/user
+  location: 'filesystem:db/migration'

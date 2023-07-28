@@ -5,10 +5,10 @@ plugins {
 }
 
 group = 'coop.protocolSN.spikes.dbMigration.flyway'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2'
 
 java {
-	sourceCompatibility = '17'
+	sourceCompatibility = '20'
 }
 
 repositories {
@@ -16,10 +16,24 @@ repositories {
 }
 
 dependencies {
+	//Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+
 	implementation 'org.springframework.boot:spring-boot-starter'
+
+	//Database
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.liquibase:liquibase-core'
+	runtimeOnly 'org.postgresql:postgresql'
+
+	//Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.testcontainers:postgresql'
+	testImplementation 'org.testcontainers:junit-jupiter'
 }
 
 tasks.named('test') {
