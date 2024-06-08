@@ -1,0 +1,11 @@
+version: '1'
+
+services:
+  user-plugin:
+    image: protocol-sn-user-plugin:latest
+    ports:
+      - 8082:8080
+    environment:
+      MICRONAUT_ENVIRONMENTS: local
+    volumes:
+      - "${HOME}/.m2:/root/.m2"
