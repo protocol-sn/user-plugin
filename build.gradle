@@ -4,7 +4,7 @@ plugins {
     id("io.micronaut.aot") version "4.3.8"
 }
 
-version = "0.0.1"
+version = "0.0.2"
 group = "coop.stlma.tech.protocolsn"
 
 repositories {
@@ -20,7 +20,12 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.yaml:snakeyaml")
 
-    implementation("coop.stlma.tech.protocolsn:ProtocolSNPluginLib:0.0.1")
+    implementation("coop.stlma.tech.protocolsn:ProtocolSNPluginLib:0.0.2")
+
+    //security
+    annotationProcessor("io.micronaut.security:micronaut-security-annotations")
+    implementation("io.micronaut.security:micronaut-security-oauth2")
+    implementation("io.micronaut.security:micronaut-security-jwt")
 
     testImplementation("io.micronaut:micronaut-http-client")
 }
