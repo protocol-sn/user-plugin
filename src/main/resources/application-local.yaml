@@ -2,28 +2,34 @@ micronaut:
   http:
     services:
       node-manager:
-        url: http://host.docker.internal:8081
+        url: http://node-manager:8080
   security:
     oauth2:
       clients:
         keycloak:
           client-id: user-plugin
-          client-secret: UheCmj5mbW7drCtzAlLG3GbmLuCPcBoK
-          grant-type: client_credentials
-          token:
-            url: http://host.docker.internal:9080/realms/social-network-ecosystem/protocol/openid-connect/token
-            auth-method: client_secret_post
+          client-secret: Sdc5bpLNBU63LqnFkBFJlTrJUQnnUTyy
+#          grant-type: client_credentials
+#          token:
+#            url: http://keycloak:9080/realms/social-network-ecosystem/protocol/openid-connect/token
+#            auth-method: client_secret_post
           client-credentials:
             service-id-regex: node-manager
           openid:
-            issuer: http://host.docker.internal:9080/realms/social-network-ecosystem/
+            issuer: http://keycloak:8080/realms/social-network-ecosystem/
     endpoints:
       logout:
         get-allowed: true
+    authentication: idtoken
 
 coop:
   stlma:
     tech:
       protocolsn:
         plugin-name: ProtocolSNUserPlugin
-        plugin-host: http://host.docker.internal:8081
+        plugin-host: http://user-plugin:8080
+
+logger:
+  levels:
+    coop.stlma.tech.protocolsn: DEBUG
+    io.micronaut: DEBUG

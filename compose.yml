@@ -9,3 +9,10 @@ services:
       MICRONAUT_ENVIRONMENTS: local
     volumes:
       - "${HOME}/.m2:/root/.m2"
+    networks:
+      - social-network-ecosystem
+
+networks:
+  social-network-ecosystem:
+    name: social-network-ecosystem
+    external: true
