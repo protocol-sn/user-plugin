@@ -1,0 +1,43 @@
+micronaut:
+  server:
+    port: 8081
+  http:
+    services:
+      node-manager:
+        url: http://localhost:8080
+  security:
+    oauth2:
+      clients:
+        keycloak:
+          client-id: user-plugin
+          client-secret: user-plugin-secret
+          client-credentials:
+            service-id-regex: node-manager
+          openid:
+            issuer: http://localhost:9080/realms/social-network-ecosystem
+        keycloak-client:
+          client-id: user-plugin
+          client-secret: user-plugin-secret
+          grant-type: client_credentials
+          token:
+            url: http://localhost:9080/realms/social-network-ecosystem/protocol/openid-connect/token
+            auth-method: client_secret_post
+          client-credentials:
+            service-id-regex: node-manager
+          openid:
+            issuer: http://localhost:9080/realms/social-network-ecosystem
+    endpoints:
+      logout:
+        get-allowed: true
+    authentication: idtoken
+
+coop:
+  stlma:
+    tech:
+      protocolsn:
+        plugin-name: ProtocolSNUserPlugin
+        plugin-host: http://localhost:8080
+
+logger:
+  levels:
+    coop.stlma.tech.protocolsn: DEBUG

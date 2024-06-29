@@ -4,7 +4,7 @@ plugins {
     id("io.micronaut.aot") version "4.3.8"
 }
 
-version = "0.0.2"
+version = "0.1.1"
 group = "coop.stlma.tech.protocolsn"
 
 repositories {
@@ -13,20 +13,41 @@ repositories {
 }
 
 dependencies {
+    //web
     annotationProcessor("io.micronaut:micronaut-http-validation")
+    implementation("io.micronaut:micronaut-http-client")
+    testImplementation("io.micronaut:micronaut-http-client")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    implementation("io.micronaut.validation:micronaut-validation")
+
+    //client
+    implementation("io.micronaut.views:micronaut-views-fieldset")
+    implementation("io.micronaut.views:micronaut-views-thymeleaf")
+
+    //protocol-sn
+    implementation("coop.stlma.tech.protocolsn:keycloak-api:0.1.0")
+    implementation("coop.stlma.tech.protocolsn:ProtocolSNPluginLib:0.1.1")
+
+    //serde
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
-    compileOnly("io.micronaut:micronaut-http-client")
-    runtimeOnly("ch.qos.logback:logback-classic")
-    runtimeOnly("org.yaml:snakeyaml")
 
-    implementation("coop.stlma.tech.protocolsn:ProtocolSNPluginLib:0.0.2")
+    //web
+    compileOnly("io.micronaut:micronaut-http-client")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+
+    //logging
+    runtimeOnly("ch.qos.logback:logback-classic")
+
+    //properties
+    runtimeOnly("org.yaml:snakeyaml")
 
     //security
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
     implementation("io.micronaut.security:micronaut-security-oauth2")
     implementation("io.micronaut.security:micronaut-security-jwt")
 
+    //testing
     testImplementation("io.micronaut:micronaut-http-client")
 }
 
