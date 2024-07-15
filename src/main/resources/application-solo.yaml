@@ -6,6 +6,12 @@ micronaut:
       node-manager::registration:
         url: http://localhost:8080
   security:
+    token:
+      jwt:
+        signatures:
+          jwks:
+            keycloak:
+              url: http://localhost:9080/realms/social-network-ecosystem/protocol/openid-connect/certs
     oauth2:
       clients:
         keycloak:
@@ -27,14 +33,13 @@ micronaut:
     endpoints:
       logout:
         get-allowed: true
-    authentication: idtoken
 
 coop:
   stlma:
     tech:
       protocolsn:
         plugin-name: ProtocolSNUserPlugin
-        plugin-host: http://localhost:8080
+        plugin-host: http://localhost:8081
 
 logger:
   levels:

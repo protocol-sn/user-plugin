@@ -1,0 +1,10 @@
+coop:
+  stlma:
+    tech:
+      protocolsn:
+        registration:
+          on-startup: false
+
+micronaut:
+  security:
+    enabled: false
