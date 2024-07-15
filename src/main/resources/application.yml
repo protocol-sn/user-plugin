@@ -1,3 +1,9 @@
 micronaut:
   application:
     name: ProtocolSNUserPlugin
+
+coop:
+  stlma:
+    tech:
+      protocolsn:
+        plugin-name: ProtocolSNUserPlugin
