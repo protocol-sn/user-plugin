@@ -1,4 +1,1 @@
-
-
-rootProject.name="user-plugin"
-
+include("user-plugin", "user-plugin-api")
