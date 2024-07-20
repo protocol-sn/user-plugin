@@ -1,0 +1,117 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "coop.stlma.tech.protocolsn",
+    "module": "node-manager-api",
+    "version": "0.1.2",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-inject"
+        },
+        {
+          "group": "io.micronaut.platform",
+          "module": "micronaut-platform",
+          "version": {
+            "requires": "4.4.2"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          },
+          "endorseStrictVersions": true
+        }
+      ],
+      "files": [
+        {
+          "name": "node-manager-api-0.1.2.jar",
+          "url": "node-manager-api-0.1.2.jar",
+          "size": 13796,
+          "sha512": "6117f5fe28afce0e27f3f4df68f486382b0519482cb13157bbe1c3d8687713c31e00164ebd934f397a2f1ae3e41320e2f6fad36c31a327863242683e079009c3",
+          "sha256": "fe6988b2f1e27fc4da0ffa07f6a72108357389de02acb86e46e373b5d718df3e",
+          "sha1": "a730fe98841f295220d9fb71d0e7e2b11740a6f9",
+          "md5": "0d5c3860c8272fb3a272ca4e8c3e95f8"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-http-client"
+        },
+        {
+          "group": "io.micronaut.reactor",
+          "module": "micronaut-reactor"
+        },
+        {
+          "group": "coop.stlma.tech.protocolsn",
+          "module": "plugin-lib-api",
+          "version": {
+            "requires": "0.1.0"
+          }
+        },
+        {
+          "group": "io.micronaut.security",
+          "module": "micronaut-security-oauth2"
+        },
+        {
+          "group": "io.micronaut.security",
+          "module": "micronaut-security-jwt"
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-inject"
+        },
+        {
+          "group": "io.micronaut.platform",
+          "module": "micronaut-platform",
+          "version": {
+            "requires": "4.4.2"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          },
+          "endorseStrictVersions": true
+        }
+      ],
+      "files": [
+        {
+          "name": "node-manager-api-0.1.2.jar",
+          "url": "node-manager-api-0.1.2.jar",
+          "size": 13796,
+          "sha512": "6117f5fe28afce0e27f3f4df68f486382b0519482cb13157bbe1c3d8687713c31e00164ebd934f397a2f1ae3e41320e2f6fad36c31a327863242683e079009c3",
+          "sha256": "fe6988b2f1e27fc4da0ffa07f6a72108357389de02acb86e46e373b5d718df3e",
+          "sha1": "a730fe98841f295220d9fb71d0e7e2b11740a6f9",
+          "md5": "0d5c3860c8272fb3a272ca4e8c3e95f8"
+        }
+      ]
+    }
+  ]
+}
