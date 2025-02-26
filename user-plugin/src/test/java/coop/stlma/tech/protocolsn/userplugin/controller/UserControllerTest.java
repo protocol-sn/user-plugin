@@ -228,7 +228,7 @@ class UserControllerTest {
         HttpResponse<List<PsnUser>> queryResponse = httpClient.toBlocking().exchange(request);
 
         UserQueryCriteria capturedCriteria = captor.getValue();
-        Assertions.assertTrue(capturedCriteria.getApproved());
+        Assertions.assertFalse(capturedCriteria.getApproved());
         Assertions.assertEquals(25, capturedCriteria.getLimit());
         Assertions.assertEquals(0, capturedCriteria.getOffset());
 

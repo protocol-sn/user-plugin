@@ -13,6 +13,7 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import reactor.core.publisher.Mono;
 
@@ -43,6 +44,10 @@ class UserServiceImplTest {
         Mockito.when(keycloakApiMock.getUser("social-network-ecosystem",
                         USER_ID.toString()))
                 .thenReturn(Mono.just(HttpResponse.ok(returnedUser)));
+
+        Mockito.when(keycloakApiMock.updateUser(Mockito.eq("social-network-ecosystem"),
+                Mockito.eq(USER_ID.toString()), Mockito.any(UserRepresentation.class)))
+                .thenReturn(Mono.empty());
 
         userService.approveUser(USER_ID).block();
 

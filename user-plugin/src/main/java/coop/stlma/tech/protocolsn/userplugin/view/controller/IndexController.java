@@ -25,17 +25,4 @@ public class IndexController {
         Map<String, String> attributes = new HashMap<>();
         return HttpResponse.ok(attributes);
     }
-
-//    @Produces(MediaType.TEXT_HTML)
-//    @Get("/")
-//    @Secured(SecurityRule.IS_AUTHENTICATED)
-//    public HttpResponse<Map<String, String>> userPage(Optional<Authentication> authentication) {
-//        Map<String, String> attributes = new HashMap<>();
-//        if (authentication.isPresent()) {
-//            if (authentication.get().getAttributes().containsKey("user-moderator")) {
-//                attributes.put("userModerator", "true");
-//            }
-//        }
-//        return HttpResponse.ok(attributes);
-//    }
 }

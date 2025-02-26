@@ -45,12 +45,6 @@ public class UserServiceImpl implements UserService {
                     log.debug("Approving user {}", userRepresentation.getAttributes());
                     return keycloakAdminClient.updateUser(keycloakRealm, userId.toString(), userRepresentation);
                 }).then();
-//                .doOnNext(userRepresentation ->
-//                    keycloakAdminClient.updateUser(
-//                            keycloakRealm,
-//                            userId.toString(),
-//                            userRepresentation))
-//                .then();
     }
 
     @Override
@@ -58,7 +52,6 @@ public class UserServiceImpl implements UserService {
         return keycloakAdminClient.queryUsers(keycloakRealm, null, null, null, null, null,
                 query.getOffset() == null ? 0 : query.getOffset(), null, null, null, null,
                 query.getLimit() == null ? 25 : query.getLimit(), query.parseToQ(), null, null)
-//                .map(HttpResponse::body)
                 .map(listHttpResponse -> {
                     log.debug("Got {} users", listHttpResponse.body().size());
                     return listHttpResponse.body();
