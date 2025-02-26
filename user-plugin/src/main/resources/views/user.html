@@ -12,8 +12,8 @@
 <nav>
     <ul>
         <li th:unless="${security}"><a href="/oauth/login/keycloak">Enter</a></li>
-        <li th:unless="${security}"><a href="/oauth/login/keycloak-client">Enter as client</a></li>
         <li th:if="${security}"><a href="/oauth/logout">Logout</a></li>
+<!--        <li th:if="${userModerator}"><a href="/approval">view users pending approval</a></li>-->
     </ul>
 </nav>
 </body>
