@@ -5,7 +5,6 @@ import coop.stlma.tech.protocolsn.keycloak.domain.UserRepresentation;
 import coop.stlma.tech.protocolsn.registration.model.PsnUser;
 import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
 import io.micronaut.context.annotation.Value;
-import io.micronaut.http.HttpResponse;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
