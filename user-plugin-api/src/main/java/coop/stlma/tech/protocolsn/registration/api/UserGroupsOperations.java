@@ -13,4 +13,6 @@ public interface UserGroupsOperations {
 
     String ADD_USER_TO_GROUP_PATH = "/v0.3.0/user-groups/{userId}/group/{groupId}";
     Mono<HttpResponse<Void>> addUserToGroup(@PathVariable("userId") UUID userId, @PathVariable("groupId") UUID groupId);
+    String REMOVE_USER_FROM_GROUP_PATH = "/v0.3.1/user-groups/{userId}/group/{groupId}";
+    Mono<HttpResponse<Void>> removeUserFromGroup(@PathVariable("userId") UUID userId, @PathVariable("groupId") UUID groupId);
 }

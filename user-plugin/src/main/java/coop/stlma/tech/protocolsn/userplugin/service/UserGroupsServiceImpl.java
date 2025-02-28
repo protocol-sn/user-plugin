@@ -25,4 +25,10 @@ public class UserGroupsServiceImpl implements UserGroupsService {
         return keycloakAdminClient.addUserToGroup(keycloakRealm, userId.toString(), groupId.toString())
                 .then();
     }
+
+    @Override
+    public Mono<Void> removeUserFromGroup(UUID userId, UUID groupId) {
+        return keycloakAdminClient.removeUserFromGroup(keycloakRealm, userId.toString(), groupId.toString())
+                .then();
+    }
 }
