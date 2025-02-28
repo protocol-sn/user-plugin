@@ -37,6 +37,30 @@ class UserServiceImplTest {
     ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
 
     @Test
+    void testVerifyUser_happyPath() {
+        UserRepresentation returnedUser = new UserRepresentation();
+
+        Mockito.when(keycloakApiMock.getUser("social-network-ecosystem",
+                        USER_ID.toString()))
+                .thenReturn(Mono.just(HttpResponse.ok(returnedUser)));
+
+        Mockito.when(keycloakApiMock.updateUser(Mockito.eq("social-network-ecosystem"),
+                        Mockito.eq(USER_ID.toString()), Mockito.any(UserRepresentation.class)))
+                .thenReturn(Mono.empty());
+
+        userService.verifyUser(USER_ID).block();
+
+        Mockito.verify(keycloakApiMock).updateUser(
+                Mockito.eq("social-network-ecosystem"),
+                Mockito.eq(USER_ID.toString()),
+                userCaptor.capture());
+
+        UserRepresentation updatedUser = userCaptor.getValue();
+
+        Assertions.assertTrue(Boolean.parseBoolean(updatedUser.getAttributes().get("verified").get(0)));
+    }
+
+    @Test
     void testApproveUser_happyPath() {
         UserRepresentation returnedUser = new UserRepresentation();
 

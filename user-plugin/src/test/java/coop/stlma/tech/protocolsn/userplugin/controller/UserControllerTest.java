@@ -3,6 +3,7 @@ package coop.stlma.tech.protocolsn.userplugin.controller;
 import coop.stlma.tech.protocolsn.registration.api.UserOperations;
 import coop.stlma.tech.protocolsn.registration.model.PsnUser;
 import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.TestUtil;
 import coop.stlma.tech.protocolsn.userplugin.service.UserService;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.core.type.Argument;
@@ -42,33 +43,45 @@ class UserControllerTest {
     HttpClient httpClient;
 
     @Test
+    void testVerifyUser_happyPath() {
+        Mockito.when(userServiceMock.verifyUser(userId)).thenReturn(Mono.empty());
+
+        HttpRequest<?> request = HttpRequest.PUT(UserOperations.VERIFY_USER_PATH.replace("{userId}", userId.toString()), "")
+                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
+
+        HttpResponse<?> rsp = httpClient.toBlocking().exchange(request);
+
+        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
+    }
+
+    @Test
+    void testVerifyUser_noRoles() {
+
+        HttpRequest<?> finalRequest = HttpRequest.PUT(UserOperations.APPROVE_PATH.replace("{userId}", userId.toString()), "")
+                .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
+
+        HttpClientResponseException result = Assertions.assertThrows(HttpClientResponseException.class,
+                () -> httpClient.toBlocking().exchange(finalRequest));
+
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getStatus());
+    }
+
+    @Test
     void testApproveUser_happyPath() {
         Mockito.when(userServiceMock.approveUser(userId)).thenReturn(Mono.empty());
 
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("AdminUser", "AdminPass");
-        HttpRequest<?> request = HttpRequest.POST("/login", creds);
+        HttpRequest<?> request = HttpRequest.PUT(UserOperations.APPROVE_PATH.replace("{userId}", userId.toString()), "")
+                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
 
-        HttpResponse<BearerAccessRefreshToken> rsp = httpClient.toBlocking().exchange(request, BearerAccessRefreshToken.class);
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
-
-        request = HttpRequest.PUT(UserOperations.APPROVE_PATH.replace("{userId}", userId.toString()), "")
-                .bearerAuth(rsp.body().getAccessToken());
-
-        rsp = httpClient.toBlocking().exchange(request);
+        HttpResponse<?> rsp = httpClient.toBlocking().exchange(request);
 
         Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
     }
 
     @Test
     void testApproveUser_noRoles() {
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("TestUser", "TestPass");
-        HttpRequest<?> request = HttpRequest.POST("/login", creds);
-
-        HttpResponse<BearerAccessRefreshToken> rsp = httpClient.toBlocking().exchange(request, BearerAccessRefreshToken.class);
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
-
         HttpRequest<?> finalRequest = HttpRequest.PUT(UserOperations.APPROVE_PATH.replace("{userId}", userId.toString()), "")
-                .bearerAuth(rsp.body().getAccessToken());
+                .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
 
         HttpClientResponseException result = Assertions.assertThrows(HttpClientResponseException.class,
                 () -> httpClient.toBlocking().exchange(finalRequest));
@@ -92,14 +105,8 @@ class UserControllerTest {
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("AdminUser", "AdminPass");
-        HttpRequest<?> request = HttpRequest.POST("/login", creds);
-
-        HttpResponse<BearerAccessRefreshToken> rsp = httpClient.toBlocking().exchange(request, BearerAccessRefreshToken.class);
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
-
-        request = HttpRequest.POST(UserOperations.QUERY_PATH, searchCritera)
-                .bearerAuth(rsp.body().getAccessToken());
+        HttpRequest<?> request = HttpRequest.POST(UserOperations.QUERY_PATH, searchCritera)
+                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
 
         HttpResponse<List<PsnUser>> queryResponse = httpClient.toBlocking().exchange(request);
 
@@ -108,7 +115,7 @@ class UserControllerTest {
         Assertions.assertEquals(5, capturedCriteria.getLimit());
         Assertions.assertEquals(9, capturedCriteria.getOffset());
 
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
+        Assertions.assertEquals(HttpStatus.OK, queryResponse.getStatus());
         List<PsnUser> responseBody  = queryResponse.getBody(Argument.listOf(PsnUser.class)).get();
         Assertions.assertEquals(3, responseBody.size());
         responseBody = responseBody.stream()
@@ -133,14 +140,8 @@ class UserControllerTest {
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("AdminUser", "AdminPass");
-        HttpRequest<?> request = HttpRequest.POST("/login", creds);
-
-        HttpResponse<BearerAccessRefreshToken> rsp = httpClient.toBlocking().exchange(request, BearerAccessRefreshToken.class);
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
-
-        request = HttpRequest.POST(UserOperations.QUERY_PATH, searchCritera)
-                .bearerAuth(rsp.body().getAccessToken());
+        HttpRequest<?> request = HttpRequest.POST(UserOperations.QUERY_PATH, searchCritera)
+                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
 
         HttpResponse<List<PsnUser>> queryResponse = httpClient.toBlocking().exchange(request);
 
@@ -149,7 +150,7 @@ class UserControllerTest {
         Assertions.assertEquals(5, capturedCriteria.getLimit());
         Assertions.assertEquals(9, capturedCriteria.getOffset());
 
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
+        Assertions.assertEquals(HttpStatus.OK, queryResponse.getStatus());
         List<PsnUser> responseBody  = queryResponse.getBody(Argument.listOf(PsnUser.class)).get();
         Assertions.assertEquals(1, responseBody.size());
 
@@ -167,14 +168,8 @@ class UserControllerTest {
         ArgumentCaptor<UserQueryCriteria> captor = ArgumentCaptor.forClass(UserQueryCriteria.class);
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.empty());
 
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("AdminUser", "AdminPass");
-        HttpRequest<?> request = HttpRequest.POST("/login", creds);
-
-        HttpResponse<BearerAccessRefreshToken> rsp = httpClient.toBlocking().exchange(request, BearerAccessRefreshToken.class);
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
-
-        request = HttpRequest.POST(UserOperations.QUERY_PATH, searchCritera)
-                .bearerAuth(rsp.body().getAccessToken());
+        HttpRequest<?> request = HttpRequest.POST(UserOperations.QUERY_PATH, searchCritera)
+                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
 
         HttpResponse<List<PsnUser>> queryResponse = httpClient.toBlocking().exchange(request);
 
@@ -183,21 +178,15 @@ class UserControllerTest {
         Assertions.assertEquals(5, capturedCriteria.getLimit());
         Assertions.assertEquals(9, capturedCriteria.getOffset());
 
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
+        Assertions.assertEquals(HttpStatus.OK, queryResponse.getStatus());
         List<PsnUser> responseBody  = queryResponse.getBody(Argument.listOf(PsnUser.class)).get();
         Assertions.assertEquals(0, responseBody.size());
     }
 
     @Test
     void testQueryUsers_noRoles() {
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("TestUser", "TestPass");
-        HttpRequest<?> request = HttpRequest.POST("/login", creds);
-
-        HttpResponse<BearerAccessRefreshToken> rsp = httpClient.toBlocking().exchange(request, BearerAccessRefreshToken.class);
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
-
         HttpRequest<?> finalRequest = HttpRequest.PUT(UserOperations.QUERY_PATH.replace("{userId}", userId.toString()), "")
-                .bearerAuth(rsp.body().getAccessToken());
+                .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
 
         HttpClientResponseException result = Assertions.assertThrows(HttpClientResponseException.class,
                 () -> httpClient.toBlocking().exchange(finalRequest));
@@ -216,14 +205,8 @@ class UserControllerTest {
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("AdminUser", "AdminPass");
-        HttpRequest<?> request = HttpRequest.POST("/login", creds);
-
-        HttpResponse<BearerAccessRefreshToken> rsp = httpClient.toBlocking().exchange(request, BearerAccessRefreshToken.class);
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
-
-        request = HttpRequest.GET(UserOperations.PENDING_APPROVAL_PATH)
-                .bearerAuth(rsp.body().getAccessToken());
+        HttpRequest<?> request = HttpRequest.GET(UserOperations.PENDING_APPROVAL_PATH)
+                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
 
         HttpResponse<List<PsnUser>> queryResponse = httpClient.toBlocking().exchange(request);
 
@@ -232,7 +215,7 @@ class UserControllerTest {
         Assertions.assertEquals(25, capturedCriteria.getLimit());
         Assertions.assertEquals(0, capturedCriteria.getOffset());
 
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
+        Assertions.assertEquals(HttpStatus.OK, queryResponse.getStatus());
         List<PsnUser> responseBody  = queryResponse.getBody(Argument.listOf(PsnUser.class)).get();
         Assertions.assertEquals(3, responseBody.size());
         responseBody = responseBody.stream()
@@ -245,14 +228,8 @@ class UserControllerTest {
 
     @Test
     void testPendingApproval_noRoles() {
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("TestUser", "TestPass");
-        HttpRequest<?> request = HttpRequest.POST("/login", creds);
-
-        HttpResponse<BearerAccessRefreshToken> rsp = httpClient.toBlocking().exchange(request, BearerAccessRefreshToken.class);
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
-
         HttpRequest<?> finalRequest = HttpRequest.PUT(UserOperations.PENDING_APPROVAL_PATH.replace("{userId}", userId.toString()), "")
-                .bearerAuth(rsp.body().getAccessToken());
+                .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
 
         HttpClientResponseException result = Assertions.assertThrows(HttpClientResponseException.class,
                 () -> httpClient.toBlocking().exchange(finalRequest));
