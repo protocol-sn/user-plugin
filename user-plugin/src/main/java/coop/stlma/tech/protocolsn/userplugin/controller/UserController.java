@@ -58,4 +58,12 @@ public class UserController implements UserOperations {
                 .collectList()
                 .map(HttpResponse::ok);
     }
+
+    @Put(UserOperations.VERIFY_USER_PATH)
+    @RolesAllowed(UserOperations.VERIFY_USER_ROLE)
+    @Override
+    public Mono<HttpResponse<Void>> verifyUser(@PathVariable("userId") UUID userId) {
+        return userService.verifyUser(userId)
+                .thenReturn(HttpResponse.ok());
+    }
 }

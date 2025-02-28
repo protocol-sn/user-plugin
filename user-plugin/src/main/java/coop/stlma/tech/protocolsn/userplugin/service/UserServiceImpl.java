@@ -30,20 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<Void> approveUser(UUID userId) {
-        return keycloakAdminClient.getUser(keycloakRealm, userId.toString())
-                .map(userRepresentationHttpResponse -> {
-                    log.debug("Got user {} to approve", userRepresentationHttpResponse.body().getUsername());
-                    UserRepresentation user = userRepresentationHttpResponse.body();
-                    if (user.getAttributes() == null) {
-                        user.setAttributes(new HashMap<>());
-                    }
-                    user.getAttributes().put("approved", List.of("true"));
-                    return user;
-                })
-                .flatMap(userRepresentation -> {
-                    log.debug("Approving user {}", userRepresentation.getAttributes());
-                    return keycloakAdminClient.updateUser(keycloakRealm, userId.toString(), userRepresentation);
-                }).then();
+        return setUserAttribute(userId, "approved", List.of("true"));
     }
 
     @Override
@@ -69,6 +56,28 @@ public class UserServiceImpl implements UserService {
                     });
                     return users;
                 });
+    }
+
+    @Override
+    public Mono<Void> verifyUser(UUID userId) {
+        return setUserAttribute(userId, "verified", List.of("true"));
+    }
+
+    private Mono<Void> setUserAttribute(UUID userId, String attribute, List<String> value) {
+        return keycloakAdminClient.getUser(keycloakRealm, userId.toString())
+                .map(userRepresentationHttpResponse -> {
+                    log.debug("Got user {} to modify attribute {}", userRepresentationHttpResponse.body().getUsername(), attribute);
+                    UserRepresentation user = userRepresentationHttpResponse.body();
+                    if (user.getAttributes() == null) {
+                        user.setAttributes(new HashMap<>());
+                    }
+                    user.getAttributes().put(attribute, value);
+                    return user;
+                })
+                .flatMap(userRepresentation -> {
+                    log.debug("New user attributes: {}", userRepresentation.getAttributes());
+                    return keycloakAdminClient.updateUser(keycloakRealm, userId.toString(), userRepresentation);
+                }).then();
     }
 
     private String findAttribute(UserRepresentation userRepresentation, String givenName) {

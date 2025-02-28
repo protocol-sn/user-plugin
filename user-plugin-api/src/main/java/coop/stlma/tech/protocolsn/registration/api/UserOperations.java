@@ -13,9 +13,8 @@ public interface UserOperations {
 
     String NODE_USER_ADMIN = "node-user-admin";
 
-    String APPROVE_PATH = "/v0.1.1/users/approve/{userId}";
     String APPROVE_ROLE = NODE_USER_ADMIN;
-
+    String APPROVE_PATH = "/v0.1.1/users/approve/{userId}";
     Mono<HttpResponse<Void>> approveUser(@PathVariable("userId") UUID userId);
 
     String QUERY_PATH = "/v0.1.1/users/query";
@@ -27,4 +26,7 @@ public interface UserOperations {
     String PENDING_APPROVAL_ROLE = NODE_USER_ADMIN;
     Mono<HttpResponse<List<PsnUser>>> usersPendingApproval(Integer limit, Integer offset);
 
+    String VERIFY_USER_PATH = "/v0.3.2/users/verify/{userId}";
+    String VERIFY_USER_ROLE = NODE_USER_ADMIN;
+    Mono<HttpResponse<Void>> verifyUser(@PathVariable("userId") UUID userId);
 }

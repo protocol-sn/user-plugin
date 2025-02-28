@@ -12,4 +12,6 @@ public interface UserService {
     Mono<Void> approveUser(UUID userId);
 
     Flux<PsnUser> queryUsers(UserQueryCriteria query);
+
+    Mono<Void> verifyUser(UUID userId);
 }
