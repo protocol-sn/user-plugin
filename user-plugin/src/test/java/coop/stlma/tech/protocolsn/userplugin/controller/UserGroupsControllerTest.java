@@ -68,4 +68,35 @@ class UserGroupsControllerTest {
         Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getStatus());
     }
 
+    @Test
+    void testRemoveUserFromGroup_happyPath() {
+
+        Mockito.when(userGroupsServiceMock.removeUserFromGroup(USER_ID, GROUP_ID)).thenReturn(Mono.empty());
+
+        HttpRequest<?> request = HttpRequest.DELETE(
+                        UserGroupsOperations.ADD_USER_TO_GROUP_PATH
+                                .replace("{userId}", USER_ID.toString())
+                                .replace("{groupId}", GROUP_ID.toString()), "")
+                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
+
+        HttpResponse<?> rsp = httpClient.toBlocking().exchange(request);
+
+        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
+    }
+
+    @Test
+    void testRemoveUserFromGroup_noRoles() {
+
+        HttpRequest<?> finalRequest = HttpRequest.DELETE(
+                        UserGroupsOperations.ADD_USER_TO_GROUP_PATH
+                                .replace("{userId}", USER_ID.toString())
+                                .replace("{groupId}", GROUP_ID.toString()), "")
+                .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
+
+        HttpClientResponseException result = Assertions.assertThrows(HttpClientResponseException.class,
+                () -> httpClient.toBlocking().exchange(finalRequest));
+
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getStatus());
+    }
+
 }

@@ -25,11 +25,21 @@ class UserGroupsServiceImplTest {
 
     @Test
     void testAddUserToGroup_happyPath() {
-        Mockito.when(keycloakApiMock.addUserToGroup("social-network-ecosystem", GROUP_ID.toString(), USER_ID.toString()))
+        Mockito.when(keycloakApiMock.addUserToGroup("social-network-ecosystem", USER_ID.toString(), GROUP_ID.toString()))
                 .thenReturn(Mono.empty());
         
         userService.addUserToGroup(USER_ID, GROUP_ID).block();
 
-        Mockito.verify(keycloakApiMock).addUserToGroup("social-network-ecosystem", GROUP_ID.toString(), USER_ID.toString());
+        Mockito.verify(keycloakApiMock).addUserToGroup("social-network-ecosystem", USER_ID.toString(), GROUP_ID.toString());
+    }
+
+    @Test
+    void testRemoveUserFromGroup_happyPath() {
+        Mockito.when(keycloakApiMock.removeUserFromGroup("social-network-ecosystem", USER_ID.toString(), GROUP_ID.toString()))
+                .thenReturn(Mono.empty());
+
+        userService.removeUserFromGroup(USER_ID, GROUP_ID).block();
+
+        Mockito.verify(keycloakApiMock).removeUserFromGroup("social-network-ecosystem", USER_ID.toString(), GROUP_ID.toString());
     }
 }
