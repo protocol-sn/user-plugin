@@ -74,7 +74,7 @@ class UserGroupsControllerTest {
         Mockito.when(userGroupsServiceMock.removeUserFromGroup(USER_ID, GROUP_ID)).thenReturn(Mono.empty());
 
         HttpRequest<?> request = HttpRequest.DELETE(
-                        UserGroupsOperations.ADD_USER_TO_GROUP_PATH
+                        UserGroupsOperations.REMOVE_USER_FROM_GROUP_PATH
                                 .replace("{userId}", USER_ID.toString())
                                 .replace("{groupId}", GROUP_ID.toString()), "")
                 .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));

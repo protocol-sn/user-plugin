@@ -5,6 +5,7 @@ import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -13,5 +14,7 @@ public interface UserService {
 
     Flux<PsnUser> queryUsers(UserQueryCriteria query);
 
-    Mono<Void> verifyUser(UUID userId);
+    Mono<Void> setUserAttribute(UUID userId, String attribute, List<String> value);
+
+    Mono<PsnUser> getUser(UUID userId);
 }

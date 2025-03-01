@@ -43,30 +43,6 @@ class UserControllerTest {
     HttpClient httpClient;
 
     @Test
-    void testVerifyUser_happyPath() {
-        Mockito.when(userServiceMock.verifyUser(userId)).thenReturn(Mono.empty());
-
-        HttpRequest<?> request = HttpRequest.PUT(UserOperations.VERIFY_USER_PATH.replace("{userId}", userId.toString()), "")
-                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
-
-        HttpResponse<?> rsp = httpClient.toBlocking().exchange(request);
-
-        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
-    }
-
-    @Test
-    void testVerifyUser_noRoles() {
-
-        HttpRequest<?> finalRequest = HttpRequest.PUT(UserOperations.APPROVE_PATH.replace("{userId}", userId.toString()), "")
-                .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
-
-        HttpClientResponseException result = Assertions.assertThrows(HttpClientResponseException.class,
-                () -> httpClient.toBlocking().exchange(finalRequest));
-
-        Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getStatus());
-    }
-
-    @Test
     void testApproveUser_happyPath() {
         Mockito.when(userServiceMock.approveUser(userId)).thenReturn(Mono.empty());
 

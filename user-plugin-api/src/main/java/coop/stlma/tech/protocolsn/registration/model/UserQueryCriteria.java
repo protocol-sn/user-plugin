@@ -13,11 +13,15 @@ public class UserQueryCriteria {
     private Integer offset;
     private Integer limit;
     private Boolean approved;
+    private Boolean verified;
 
     public String parseToQ() {
         StringBuilder sb = new StringBuilder();
         if (approved != null) {
             sb.append("approved:").append(approved).append(" ");
+        }
+        if (verified != null) {
+            sb.append("verified:").append(verified).append(" ");
         }
         return sb.toString().trim();
     }
