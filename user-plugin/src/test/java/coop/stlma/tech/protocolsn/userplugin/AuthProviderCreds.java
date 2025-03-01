@@ -1,5 +1,6 @@
 package coop.stlma.tech.protocolsn.userplugin;
 
+import coop.stlma.tech.protocolsn.pluginlib.security.CommonRoles;
 import coop.stlma.tech.protocolsn.registration.api.UserOperations;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -19,10 +20,17 @@ public class AuthProviderCreds<B> implements HttpRequestAuthenticationProvider<B
     public @NonNull AuthenticationResponse authenticate(@Nullable HttpRequest<B> requestContext,
                                                         @NonNull AuthenticationRequest<String, String> authRequest) {
         if (authRequest.getIdentity().equals("AdminUser") && authRequest.getSecret().equals("AdminPass")) {
-            return AuthenticationResponse.success("AdminUser", Map.of("realm_access", Map.of("roles", List.of(UserOperations.NODE_USER_ADMIN))));
+            return AuthenticationResponse.success("AdminUser",
+                    Map.of("realm_access",
+                            Map.of("roles",
+                                    List.of(UserOperations.NODE_USER_ADMIN,
+                                            CommonRoles.LOGGED_IN_USER))));
         }
         if (authRequest.getIdentity().equals("TestUser") && authRequest.getSecret().equals("TestPass")) {
-            return AuthenticationResponse.success("TestUser");
+            return AuthenticationResponse.success("TestUser",
+                    Map.of("realm_access",
+                            Map.of("roles",
+                                    List.of(CommonRoles.LOGGED_IN_USER))));
         }
         return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
     }

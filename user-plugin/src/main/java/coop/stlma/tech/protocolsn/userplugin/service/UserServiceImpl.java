@@ -4,6 +4,7 @@ import coop.stlma.tech.protocolsn.keycloak.client.KeycloakAdminClient;
 import coop.stlma.tech.protocolsn.keycloak.domain.UserRepresentation;
 import coop.stlma.tech.protocolsn.registration.model.PsnUser;
 import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.util.UserUtil;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -50,20 +51,16 @@ public class UserServiceImpl implements UserService {
                                 userRepresentation.getId(),
                                 userRepresentation.getUsername(),
                                 userRepresentation.getEmail(),
-                                findAttribute(userRepresentation, "given_name"),
-                                findAttribute(userRepresentation, "family_name"),
-                                findAttributeAsBoolean(userRepresentation, "approved")));
+                                UserUtil.findAttribute(userRepresentation, "given_name"),
+                                UserUtil.findAttribute(userRepresentation, "family_name"),
+                                UserUtil.findAttributeAsBoolean(userRepresentation, "approved")));
                     });
                     return users;
                 });
     }
 
     @Override
-    public Mono<Void> verifyUser(UUID userId) {
-        return setUserAttribute(userId, "verified", List.of("true"));
-    }
-
-    private Mono<Void> setUserAttribute(UUID userId, String attribute, List<String> value) {
+    public Mono<Void> setUserAttribute(UUID userId, String attribute, List<String> value) {
         return keycloakAdminClient.getUser(keycloakRealm, userId.toString())
                 .map(userRepresentationHttpResponse -> {
                     log.debug("Got user {} to modify attribute {}", userRepresentationHttpResponse.body().getUsername(), attribute);
@@ -80,17 +77,19 @@ public class UserServiceImpl implements UserService {
                 }).then();
     }
 
-    private String findAttribute(UserRepresentation userRepresentation, String givenName) {
-        if (userRepresentation.getAttributes() != null && userRepresentation.getAttributes().containsKey(givenName) && !userRepresentation.getAttributes().get(givenName).isEmpty()) {
-            return userRepresentation.getAttributes().get(givenName).getFirst();
-        }
-        return null;
-    }
-
-    private Boolean findAttributeAsBoolean(UserRepresentation userRepresentation, String attribute) {
-        if (userRepresentation.getAttributes() != null && userRepresentation.getAttributes().containsKey(attribute) && !userRepresentation.getAttributes().get(attribute).isEmpty()) {
-            return Boolean.parseBoolean(userRepresentation.getAttributes().get(attribute).getFirst());
-        }
-        return null;
+    @Override
+    public Mono<PsnUser> getUser(UUID userId) {
+        return keycloakAdminClient.getUser(keycloakRealm, userId.toString())
+            .map(userRepresentationHttpResponse -> {
+                UserRepresentation userRepresentation = userRepresentationHttpResponse.body();
+                log.debug("Got user: {}", userRepresentation.getUsername());
+                return new PsnUser(
+                        userRepresentation.getId(),
+                        userRepresentation.getUsername(),
+                        userRepresentation.getEmail(),
+                        UserUtil.findAttribute(userRepresentation, "given_name"),
+                        UserUtil.findAttribute(userRepresentation, "family_name"),
+                        UserUtil.findAttributeAsBoolean(userRepresentation, "approved"));
+            });
     }
 }

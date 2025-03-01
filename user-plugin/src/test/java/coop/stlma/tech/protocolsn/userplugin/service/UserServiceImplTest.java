@@ -30,35 +30,14 @@ class UserServiceImplTest {
     @Primary
     KeycloakAdminClient keycloakApiMock = Mockito.mock(KeycloakAdminClient.class);
 
+    @MockBean
+    @Primary
+    UserService userServiceMock = Mockito.mock(UserService.class);
+
     @Inject
-    UserServiceImpl userService;
+    UserServiceImpl userVerificationService;
 
     ArgumentCaptor<UserRepresentation> userCaptor = ArgumentCaptor.forClass(UserRepresentation.class);
-    ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
-
-    @Test
-    void testVerifyUser_happyPath() {
-        UserRepresentation returnedUser = new UserRepresentation();
-
-        Mockito.when(keycloakApiMock.getUser("social-network-ecosystem",
-                        USER_ID.toString()))
-                .thenReturn(Mono.just(HttpResponse.ok(returnedUser)));
-
-        Mockito.when(keycloakApiMock.updateUser(Mockito.eq("social-network-ecosystem"),
-                        Mockito.eq(USER_ID.toString()), Mockito.any(UserRepresentation.class)))
-                .thenReturn(Mono.empty());
-
-        userService.verifyUser(USER_ID).block();
-
-        Mockito.verify(keycloakApiMock).updateUser(
-                Mockito.eq("social-network-ecosystem"),
-                Mockito.eq(USER_ID.toString()),
-                userCaptor.capture());
-
-        UserRepresentation updatedUser = userCaptor.getValue();
-
-        Assertions.assertTrue(Boolean.parseBoolean(updatedUser.getAttributes().get("verified").get(0)));
-    }
 
     @Test
     void testApproveUser_happyPath() {
@@ -72,7 +51,7 @@ class UserServiceImplTest {
                 Mockito.eq(USER_ID.toString()), Mockito.any(UserRepresentation.class)))
                 .thenReturn(Mono.empty());
 
-        userService.approveUser(USER_ID).block();
+        userVerificationService.approveUser(USER_ID).block();
 
         Mockito.verify(keycloakApiMock).updateUser(
                 Mockito.eq("social-network-ecosystem"),
@@ -105,7 +84,7 @@ class UserServiceImplTest {
                         Mockito.isNull(), Mockito.isNull()))
                 .thenReturn(Mono.just(HttpResponse.ok(expectedReps)));
 
-        List<PsnUser> result = userService.queryUsers(query).collectList().block();
+        List<PsnUser> result = userVerificationService.queryUsers(query).collectList().block();
 
         Assertions.assertEquals(5, result.size());
         result = result.stream()
@@ -134,7 +113,7 @@ class UserServiceImplTest {
                         Mockito.isNull(), Mockito.isNull()))
                 .thenReturn(Mono.just(HttpResponse.ok(expectedReps)));
 
-        List<PsnUser> result = userService.queryUsers(query).collectList().block();
+        List<PsnUser> result = userVerificationService.queryUsers(query).collectList().block();
 
         Assertions.assertEquals(0, result.size());
     }
@@ -152,7 +131,7 @@ class UserServiceImplTest {
                         Mockito.isNull(), Mockito.isNull()))
                 .thenReturn(Mono.empty());
 
-        List<PsnUser> result = userService.queryUsers(query).collectList().block();
+        List<PsnUser> result = userVerificationService.queryUsers(query).collectList().block();
 
         Assertions.assertEquals(0, result.size());
     }

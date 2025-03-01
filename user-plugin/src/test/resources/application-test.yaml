@@ -15,3 +15,8 @@ micronaut:
           secret:
             generator:
               secret: testSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecrettestSecret
+
+endpoints:
+  routes:
+    enabled: true
+    sensitive: false
