@@ -1,9 +1,11 @@
 package coop.stlma.tech.protocolsn.registration.api;
 
+import coop.stlma.tech.protocolsn.registration.model.UserGroup;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.PathVariable;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 import static coop.stlma.tech.protocolsn.registration.api.UserOperations.NODE_USER_ADMIN;
@@ -15,4 +17,11 @@ public interface UserGroupsOperations {
     Mono<HttpResponse<Void>> addUserToGroup(@PathVariable("userId") UUID userId, @PathVariable("groupId") UUID groupId);
     String REMOVE_USER_FROM_GROUP_PATH = "/v0.3.1/user-groups/{userId}/group/{groupId}";
     Mono<HttpResponse<Void>> removeUserFromGroup(@PathVariable("userId") UUID userId, @PathVariable("groupId") UUID groupId);
+
+    String ADD_GROUP_TO_DEFAULTS = "/v0.3.4/user-groups/defaults/{groupId}";
+    Mono<HttpResponse<Void>> addGroupsToDefaults(@PathVariable("groupId") UUID groupId);
+    String REMOVE_GROUP_FROM_DEFAULTS = ADD_GROUP_TO_DEFAULTS;
+    Mono<HttpResponse<Void>> removeGroupsFromDefaults(@PathVariable("groupId") UUID groupId);
+    String GET_DEFAULT_GROUPS_PATH = "/v0.3.4/user-groups/defaults";
+    Mono<HttpResponse<List<UserGroup>>> getDefaultGroups();
 }
