@@ -1,5 +1,6 @@
 package coop.stlma.tech.protocolsn.registration.api;
 
+import coop.stlma.tech.protocolsn.registration.model.GroupQueryCriteria;
 import coop.stlma.tech.protocolsn.registration.model.UserGroup;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.PathVariable;
@@ -24,4 +25,7 @@ public interface UserGroupsOperations {
     Mono<HttpResponse<Void>> removeGroupsFromDefaults(@PathVariable("groupId") UUID groupId);
     String GET_DEFAULT_GROUPS_PATH = "/v0.3.4/user-groups/defaults";
     Mono<HttpResponse<List<UserGroup>>> getDefaultGroups();
+
+    String GET_GROUPS_PATH = "/v0.3.5/user-groups";
+    Mono<HttpResponse<List<UserGroup>>> getGroups(GroupQueryCriteria query);
 }

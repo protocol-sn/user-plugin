@@ -6,6 +6,7 @@ import coop.stlma.tech.protocolsn.registration.model.UserGroup;
 import coop.stlma.tech.protocolsn.userplugin.TestUtil;
 import coop.stlma.tech.protocolsn.userplugin.service.UserGroupsService;
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -22,6 +23,8 @@ import org.mockito.Mockito;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 @MicronautTest
@@ -152,6 +155,47 @@ class UserGroupsControllerTest {
                 () -> httpClient.toBlocking().exchange(finalRequest));
 
         Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getStatus());
+    }
+
+    @Test
+    void testQueryGroups_noRoles() {
+        HttpRequest<?> finalRequest = HttpRequest.GET(UserGroupsOperations.GET_DEFAULT_GROUPS_PATH)
+                .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
+
+        HttpClientResponseException result = Assertions.assertThrows(HttpClientResponseException.class,
+                () -> httpClient.toBlocking().exchange(finalRequest));
+
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getStatus());
+    }
+
+    @Test
+    void testQueryGroups_happyPath() {
+        UserGroup userGroup = new UserGroup();
+        userGroup.setId(GROUP_ID);
+        userGroup.setGroupName("controller group");
+        userGroup.setNewUserDefault(true);
+        UserGroup userGroup2 = new UserGroup();
+        userGroup2.setId(UUID.nameUUIDFromBytes("controllerGroup2".getBytes()));
+        userGroup2.setGroupName("second group");
+        userGroup2.setNewUserDefault(true);
+
+        GroupQueryCriteria criteria = GroupQueryCriteria.builder().offset(2).build();
+
+        Mockito.when(userGroupsServiceMock.queryGroups(groupQueryCriteriaCaptor.capture()))
+                .thenReturn(Flux.just(userGroup, userGroup2));
+
+        HttpRequest<?> finalRequest = HttpRequest.POST(UserGroupsOperations.GET_GROUPS_PATH, criteria)
+                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
+
+        HttpResponse<List<UserGroup>> rsp = httpClient.toBlocking().exchange(finalRequest, Argument.listOf(UserGroup.class));
+
+        Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
+        List<UserGroup> responseBody = rsp.getBody().get();
+        responseBody.stream().sorted(Comparator.comparing(UserGroup::getGroupName));
+
+        Assertions.assertEquals(2, responseBody.size());
+        Assertions.assertEquals("controller group", responseBody.get(0).getGroupName());
+        Assertions.assertEquals("second group", responseBody.get(1).getGroupName());
     }
 
 }

@@ -1,11 +1,11 @@
 package coop.stlma.tech.protocolsn.userplugin.controller;
 
-import coop.stlma.tech.protocolsn.pluginlib.security.CommonRoles;
 import coop.stlma.tech.protocolsn.registration.api.UserGroupsOperations;
 import coop.stlma.tech.protocolsn.registration.model.GroupQueryCriteria;
 import coop.stlma.tech.protocolsn.registration.model.UserGroup;
 import coop.stlma.tech.protocolsn.userplugin.service.UserGroupsService;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
@@ -67,6 +67,15 @@ public class UserGroupsController implements UserGroupsOperations {
         return userGroupsService.queryGroups(GroupQueryCriteria.builder()
                         .defaultUserGroup(true)
                         .build())
+                .collectList()
+                .map(HttpResponse::ok);
+    }
+
+    @Post(GET_GROUPS_PATH)
+    @Secured({NODE_USER_GROUP_MANAGEMENT_ROLE, NODE_USER_ADMIN})
+    @Override
+    public Mono<HttpResponse<List<UserGroup>>> getGroups(@Body GroupQueryCriteria query) {
+        return userGroupsService.queryGroups(query)
                 .collectList()
                 .map(HttpResponse::ok);
     }
