@@ -1,6 +1,7 @@
 package coop.stlma.tech.protocolsn.userplugin;
 
 import coop.stlma.tech.protocolsn.pluginlib.security.CommonRoles;
+import coop.stlma.tech.protocolsn.registration.api.UserGroupsOperations;
 import coop.stlma.tech.protocolsn.registration.api.UserOperations;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -24,6 +25,7 @@ public class AuthProviderCreds<B> implements HttpRequestAuthenticationProvider<B
                     Map.of("realm_access",
                             Map.of("roles",
                                     List.of(UserOperations.NODE_USER_ADMIN,
+                                            UserGroupsOperations.NODE_USER_GROUP_MANAGEMENT_ROLE,
                                             CommonRoles.LOGGED_IN_USER))));
         }
         if (authRequest.getIdentity().equals("TestUser") && authRequest.getSecret().equals("TestPass")) {
