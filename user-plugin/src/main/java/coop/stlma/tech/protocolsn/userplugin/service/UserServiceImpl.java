@@ -53,7 +53,9 @@ public class UserServiceImpl implements UserService {
                                 userRepresentation.getEmail(),
                                 UserUtil.findAttribute(userRepresentation, "given_name"),
                                 UserUtil.findAttribute(userRepresentation, "family_name"),
-                                UserUtil.findAttributeAsBoolean(userRepresentation, "approved")));
+                                UserUtil.findAttributeAsBoolean(userRepresentation, "approved"),
+                                UserUtil.findAttributeAsBoolean(userRepresentation, "verified"),
+                                UserUtil.findAttributeAsBoolean(userRepresentation, "requests-verification")));
                     });
                     return users;
                 });
@@ -89,7 +91,9 @@ public class UserServiceImpl implements UserService {
                         userRepresentation.getEmail(),
                         UserUtil.findAttribute(userRepresentation, "given_name"),
                         UserUtil.findAttribute(userRepresentation, "family_name"),
-                        UserUtil.findAttributeAsBoolean(userRepresentation, "approved"));
+                        UserUtil.findAttributeAsBoolean(userRepresentation, "approved"),
+                        UserUtil.findAttributeAsBoolean(userRepresentation, "verified"),
+                        UserUtil.findAttributeAsBoolean(userRepresentation, "requests-verification"));
             });
     }
 }

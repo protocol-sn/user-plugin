@@ -19,3 +19,5 @@
 - [Micronaut AOT documentation](https://micronaut-projects.github.io/micronaut-aot/latest/guide/)
 
 
+## TODO
+- [ ] Look into using the getUser endpoint as a wrapper for oidc userinfo. 

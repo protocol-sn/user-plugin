@@ -25,4 +25,7 @@ public interface UserOperations {
     String PENDING_APPROVAL_PATH = "/v0.1.1/users/pending-approval";
     String PENDING_APPROVAL_ROLE = NODE_USER_ADMIN;
     Mono<HttpResponse<List<PsnUser>>> usersPendingApproval(Integer limit, Integer offset);
+
+    String GET_USER_PATH = "/v0.3.6/users/{userId}";
+    Mono<HttpResponse<PsnUser>> getUser(@PathVariable("userId") UUID userId);
 }
