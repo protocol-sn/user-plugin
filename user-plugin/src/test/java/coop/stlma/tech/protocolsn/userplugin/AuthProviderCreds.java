@@ -14,9 +14,14 @@ import jakarta.inject.Singleton;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Singleton
 public class AuthProviderCreds<B> implements HttpRequestAuthenticationProvider<B> {
+
+    public static final UUID ADMIN_USER_ID = UUID.nameUUIDFromBytes("AdminUser".getBytes());
+    public static final UUID TEST_USER_ID = UUID.nameUUIDFromBytes("TestUser".getBytes());
+
     @Override
     public @NonNull AuthenticationResponse authenticate(@Nullable HttpRequest<B> requestContext,
                                                         @NonNull AuthenticationRequest<String, String> authRequest) {
@@ -26,13 +31,15 @@ public class AuthProviderCreds<B> implements HttpRequestAuthenticationProvider<B
                             Map.of("roles",
                                     List.of(UserOperations.NODE_USER_ADMIN,
                                             UserGroupsOperations.NODE_USER_GROUP_MANAGEMENT_ROLE,
-                                            CommonRoles.LOGGED_IN_USER))));
+                                            CommonRoles.LOGGED_IN_USER)),
+                    "sub", ADMIN_USER_ID.toString()));
         }
         if (authRequest.getIdentity().equals("TestUser") && authRequest.getSecret().equals("TestPass")) {
             return AuthenticationResponse.success("TestUser",
                     Map.of("realm_access",
                             Map.of("roles",
-                                    List.of(CommonRoles.LOGGED_IN_USER))));
+                                    List.of(CommonRoles.LOGGED_IN_USER)),
+                            "sub", TEST_USER_ID.toString()));
         }
         return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
     }

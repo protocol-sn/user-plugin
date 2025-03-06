@@ -29,6 +29,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import static coop.stlma.tech.protocolsn.userplugin.AuthProviderCreds.TEST_USER_ID;
+
 @MicronautTest
 class UserControllerTest {
 
@@ -75,9 +77,9 @@ class UserControllerTest {
 
         ArgumentCaptor<UserQueryCriteria> captor = ArgumentCaptor.forClass(UserQueryCriteria.class);
         List<PsnUser> returnedUsers = List.of(
-                new PsnUser("one", "user1", null, null, null, true),
-                new PsnUser("two", "user2", null, null, null, true),
-                new PsnUser("three", "user3", null, null, null, true)
+                new PsnUser("one", "user1", null, null, null, true, null, null),
+                new PsnUser("two", "user2", null, null, null, true, null, null),
+                new PsnUser("three", "user3", null, null, null, true, null, null)
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
@@ -112,7 +114,7 @@ class UserControllerTest {
 
         ArgumentCaptor<UserQueryCriteria> captor = ArgumentCaptor.forClass(UserQueryCriteria.class);
         List<PsnUser> returnedUsers = List.of(
-                new PsnUser("one", "user1", null, null, null, true)
+                new PsnUser("one", "user1", null, null, null, true, null, null)
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
@@ -175,9 +177,9 @@ class UserControllerTest {
 
         ArgumentCaptor<UserQueryCriteria> captor = ArgumentCaptor.forClass(UserQueryCriteria.class);
         List<PsnUser> returnedUsers = List.of(
-                new PsnUser("one", "user1", null, null, null, true),
-                new PsnUser("two", "user2", null, null, null, true),
-                new PsnUser("three", "user3", null, null, null, true)
+                new PsnUser("one", "user1", null, null, null, true, null, null),
+                new PsnUser("two", "user2", null, null, null, true, null, null),
+                new PsnUser("three", "user3", null, null, null, true, null, null)
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
@@ -211,5 +213,48 @@ class UserControllerTest {
                 () -> httpClient.toBlocking().exchange(finalRequest));
 
         Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getStatus());
+    }
+
+    @Test
+    void testGetUser_happyPath() {
+        Mockito.when(userServiceMock.getUser(userId))
+                .thenReturn(
+                        Mono.just(new PsnUser("one", "user1", null, null, null,
+                                true, null, null)));
+
+        HttpRequest<?> finalRequest = HttpRequest.GET(UserOperations.GET_USER_PATH.replace("{userId}", userId.toString()))
+                .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
+
+        HttpResponse<PsnUser> result = httpClient.toBlocking().exchange(finalRequest, PsnUser.class);
+
+        Assertions.assertEquals(HttpStatus.OK, result.getStatus());
+        Assertions.assertEquals("user1", result.getBody().get().username());
+    }
+
+    @Test
+    void testGetUser_nonAdminCannotGetAnotherUser() {
+
+        HttpRequest<?> finalRequest = HttpRequest.GET(UserOperations.GET_USER_PATH.replace("{userId}", userId.toString()))
+                .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
+
+        HttpClientResponseException result = Assertions.assertThrows(HttpClientResponseException.class, () -> httpClient.toBlocking().exchange(finalRequest));
+
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getStatus());
+    }
+
+    @Test
+    void testGetUser_nonAdminCanGetSelf() {
+        Mockito.when(userServiceMock.getUser(TEST_USER_ID))
+                .thenReturn(
+                        Mono.just(new PsnUser("one", "user1", null, null, null,
+                                true, null, null)));
+
+        HttpRequest<?> finalRequest = HttpRequest.GET(UserOperations.GET_USER_PATH.replace("{userId}", TEST_USER_ID.toString()))
+                .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
+
+        HttpResponse<PsnUser> result = httpClient.toBlocking().exchange(finalRequest, PsnUser.class);
+
+        Assertions.assertEquals(HttpStatus.OK, result.getStatus());
+        Assertions.assertEquals("user1", result.getBody().get().username());
     }
 }
