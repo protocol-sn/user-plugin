@@ -14,6 +14,7 @@ public class UserQueryCriteria {
     private Integer limit;
     private Boolean approved;
     private Boolean verified;
+    private Boolean requestsVerification;
 
     public String parseToQ() {
         StringBuilder sb = new StringBuilder();
@@ -22,6 +23,9 @@ public class UserQueryCriteria {
         }
         if (verified != null) {
             sb.append("verified:").append(verified).append(" ");
+        }
+        if (requestsVerification != null) {
+            sb.append("requests-verification:").append(requestsVerification).append(" ");
         }
         return sb.toString().trim();
     }

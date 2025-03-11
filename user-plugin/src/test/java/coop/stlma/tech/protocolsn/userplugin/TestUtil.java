@@ -1,6 +1,7 @@
 package coop.stlma.tech.protocolsn.userplugin;
 
 import coop.stlma.tech.protocolsn.keycloak.domain.UserRepresentation;
+import coop.stlma.tech.protocolsn.registration.model.PsnUser;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -9,7 +10,32 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.token.render.BearerAccessRefreshToken;
 import org.junit.jupiter.api.Assertions;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public class TestUtil {
+
+    public static List<PsnUser> buildPsnUsers(int numberToBuild) {
+        List<PsnUser> returnMe = new ArrayList<>();
+        for (int i = 1; i <= numberToBuild; i++) {
+            returnMe.add(buildPsnUser("TestUser" + i));
+        }
+        return returnMe;
+    }
+
+    public static PsnUser buildPsnUser(String username) {
+        return new PsnUser(
+                UUID.nameUUIDFromBytes(username.getBytes()).toString(),
+                username,
+                username + "@protocolSN.com",
+                username.substring(0, username.length() / 2),
+                username.substring(username.length() / 2),
+                true,
+                true,
+                true
+        );
+    }
 
     public static UserRepresentation buildUserRepresentation(String username) {
         UserRepresentation returnMe = new UserRepresentation();

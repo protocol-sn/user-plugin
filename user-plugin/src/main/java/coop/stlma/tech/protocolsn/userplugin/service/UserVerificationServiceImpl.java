@@ -28,7 +28,9 @@ public class UserVerificationServiceImpl implements UserVerificationService {
 
     @Override
     public Mono<Void> verifyUser(UUID userId) {
-        return userService.setUserAttribute(userId, "verified", List.of("true"));
+        return userService.setUserAttribute(userId, "verified", List.of("true"))
+                .then(Mono.defer(() ->
+                        userService.setUserAttribute(userId, "requests-verification", List.of("false"))));
     }
 
     @Override

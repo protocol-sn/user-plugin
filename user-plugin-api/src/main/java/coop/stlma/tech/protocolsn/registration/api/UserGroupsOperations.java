@@ -14,18 +14,18 @@ import static coop.stlma.tech.protocolsn.registration.api.UserOperations.NODE_US
 public interface UserGroupsOperations {
     String NODE_USER_GROUP_MANAGEMENT_ROLE = NODE_USER_ADMIN;
 
-    String ADD_USER_TO_GROUP_PATH = "/v0.3.0/user-groups/{userId}/group/{groupId}";
+    String ADD_USER_TO_GROUP_PATH = "/user-groups/{userId}/group/{groupId}";
     Mono<HttpResponse<Void>> addUserToGroup(@PathVariable("userId") UUID userId, @PathVariable("groupId") UUID groupId);
-    String REMOVE_USER_FROM_GROUP_PATH = "/v0.3.1/user-groups/{userId}/group/{groupId}";
+    String REMOVE_USER_FROM_GROUP_PATH = "/user-groups/{userId}/group/{groupId}";
     Mono<HttpResponse<Void>> removeUserFromGroup(@PathVariable("userId") UUID userId, @PathVariable("groupId") UUID groupId);
 
-    String ADD_GROUP_TO_DEFAULTS = "/v0.3.4/user-groups/defaults/{groupId}";
+    String ADD_GROUP_TO_DEFAULTS = "/user-groups/defaults/{groupId}";
     Mono<HttpResponse<Void>> addGroupsToDefaults(@PathVariable("groupId") UUID groupId);
     String REMOVE_GROUP_FROM_DEFAULTS = ADD_GROUP_TO_DEFAULTS;
     Mono<HttpResponse<Void>> removeGroupsFromDefaults(@PathVariable("groupId") UUID groupId);
-    String GET_DEFAULT_GROUPS_PATH = "/v0.3.4/user-groups/defaults";
+    String GET_DEFAULT_GROUPS_PATH = "/user-groups/defaults";
     Mono<HttpResponse<List<UserGroup>>> getDefaultGroups();
 
-    String GET_GROUPS_PATH = "/v0.3.5/user-groups";
+    String GET_GROUPS_PATH = "/user-groups";
     Mono<HttpResponse<List<UserGroup>>> getGroups(GroupQueryCriteria query);
 }

@@ -8,9 +8,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -28,10 +26,12 @@ class UserVerificationServiceImplTest {
     @Primary
     KeycloakAdminClient keycloakApiMock = Mockito.mock(KeycloakAdminClient.class);
 
-    @Inject
-    UserVerificationServiceImpl userService;
+    @MockBean
+    @Primary
+    UserService userServiceMock = Mockito.mock(UserService.class);
 
-    ArgumentCaptor<UserRepresentation> userCaptor = ArgumentCaptor.forClass(UserRepresentation.class);
+    @Inject
+    UserVerificationServiceImpl userVerificationService;
 
     @Test
     void testRequestVerification_userAlreadyVerified() {
@@ -43,7 +43,7 @@ class UserVerificationServiceImplTest {
                 .thenReturn(Mono.just(HttpResponse.ok(returnedUser)));
 
 
-        StepVerifier.create(userService.requestVerification(USER_ID))
+        StepVerifier.create(userVerificationService.requestVerification(USER_ID))
                 .expectError(UserManagementException.class)
                 .verify();
     }
@@ -56,39 +56,25 @@ class UserVerificationServiceImplTest {
                         USER_ID.toString()))
                 .thenReturn(Mono.just(HttpResponse.ok(returnedUser)));
 
-        Mockito.when(keycloakApiMock.updateUser(Mockito.eq("social-network-ecosystem"),
-                        Mockito.eq(USER_ID.toString()), Mockito.any(UserRepresentation.class)))
+        Mockito.when(userServiceMock.setUserAttribute(USER_ID, "requests-verification", List.of("true")))
                 .thenReturn(Mono.empty());
 
-        userService.requestVerification(USER_ID).block();
+        userVerificationService.requestVerification(USER_ID).block();
 
-        Mockito.verify(keycloakApiMock).updateUser(
-                Mockito.eq("social-network-ecosystem"),
-                Mockito.eq(USER_ID.toString()),
-                userCaptor.capture());
+        Mockito.verify(userServiceMock).setUserAttribute(USER_ID, "requests-verification", List.of("true"));
     }
 
     @Test
     void testVerifyUser_happyPath() {
-        UserRepresentation returnedUser = new UserRepresentation();
-
-        Mockito.when(keycloakApiMock.getUser("social-network-ecosystem",
-                        USER_ID.toString()))
-                .thenReturn(Mono.just(HttpResponse.ok(returnedUser)));
-
-        Mockito.when(keycloakApiMock.updateUser(Mockito.eq("social-network-ecosystem"),
-                        Mockito.eq(USER_ID.toString()), Mockito.any(UserRepresentation.class)))
+        Mockito.when(userServiceMock.setUserAttribute(USER_ID, "verified", List.of("true")))
                 .thenReturn(Mono.empty());
 
-        userService.verifyUser(USER_ID).block();
+        Mockito.when(userServiceMock.setUserAttribute(USER_ID, "requests-verification", List.of("false")))
+                .thenReturn(Mono.empty());
 
-        Mockito.verify(keycloakApiMock).updateUser(
-                Mockito.eq("social-network-ecosystem"),
-                Mockito.eq(USER_ID.toString()),
-                userCaptor.capture());
+        userVerificationService.verifyUser(USER_ID).block();
 
-        UserRepresentation updatedUser = userCaptor.getValue();
-
-        Assertions.assertTrue(Boolean.parseBoolean(updatedUser.getAttributes().get("verified").get(0)));
+        Mockito.verify(userServiceMock).setUserAttribute(USER_ID, "verified", List.of("true"));
+        Mockito.verify(userServiceMock).setUserAttribute(USER_ID, "requests-verification", List.of("false"));
     }
 }
