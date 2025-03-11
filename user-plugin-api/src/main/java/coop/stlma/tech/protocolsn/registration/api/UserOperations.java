@@ -14,18 +14,18 @@ public interface UserOperations {
     String NODE_USER_ADMIN = "node-user-admin";
 
     String APPROVE_ROLE = NODE_USER_ADMIN;
-    String APPROVE_PATH = "/v0.1.1/users/approve/{userId}";
+    String APPROVE_PATH = "/users/approve/{userId}";
     Mono<HttpResponse<Void>> approveUser(@PathVariable("userId") UUID userId);
 
-    String QUERY_PATH = "/v0.1.1/users/query";
+    String QUERY_PATH = "/users/query";
     String QUERY_ROLE = NODE_USER_ADMIN;
 
     Mono<HttpResponse<List<PsnUser>>> queryUsers(UserQueryCriteria query);
 
-    String PENDING_APPROVAL_PATH = "/v0.1.1/users/pending-approval";
+    String PENDING_APPROVAL_PATH = "/users/pending-approval";
     String PENDING_APPROVAL_ROLE = NODE_USER_ADMIN;
     Mono<HttpResponse<List<PsnUser>>> usersPendingApproval(Integer limit, Integer offset);
 
-    String GET_USER_PATH = "/v0.3.6/users/{userId}";
+    String GET_USER_PATH = "/users/{userId}";
     Mono<HttpResponse<PsnUser>> getUser(@PathVariable("userId") UUID userId);
 }

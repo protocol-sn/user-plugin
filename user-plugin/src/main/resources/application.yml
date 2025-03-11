@@ -5,6 +5,7 @@ micronaut:
     cors:
       enabled: true
     port: 8081
+    context-path: /
   http:
     services:
       keycloak-admin:

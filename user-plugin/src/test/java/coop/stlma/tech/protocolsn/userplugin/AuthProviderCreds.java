@@ -3,6 +3,7 @@ package coop.stlma.tech.protocolsn.userplugin;
 import coop.stlma.tech.protocolsn.pluginlib.security.CommonRoles;
 import coop.stlma.tech.protocolsn.registration.api.UserGroupsOperations;
 import coop.stlma.tech.protocolsn.registration.api.UserOperations;
+import coop.stlma.tech.protocolsn.registration.api.UserVerificationOperations;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -31,6 +32,7 @@ public class AuthProviderCreds<B> implements HttpRequestAuthenticationProvider<B
                             Map.of("roles",
                                     List.of(UserOperations.NODE_USER_ADMIN,
                                             UserGroupsOperations.NODE_USER_GROUP_MANAGEMENT_ROLE,
+                                            UserVerificationOperations.VERIFY_USER_ROLE,
                                             CommonRoles.LOGGED_IN_USER)),
                     "sub", ADMIN_USER_ID.toString()));
         }

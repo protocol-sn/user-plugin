@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-version "0.3.6"
+version getProperty("projectVersion")
 group "coop.stlma.tech.protocolsn"
 
 repositories {

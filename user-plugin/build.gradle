@@ -4,7 +4,7 @@ plugins {
     id("io.micronaut.aot") version "4.3.8"
 }
 
-version = "0.3.6"
+version getProperty("projectVersion")
 group = "coop.stlma.tech.protocolsn"
 
 repositories {
