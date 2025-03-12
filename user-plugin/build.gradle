@@ -28,7 +28,7 @@ dependencies {
     implementation("io.micronaut.views:micronaut-views-thymeleaf")
 
     //protocol-sn
-    implementation("coop.stlma.tech.protocolsn:keycloak-api:0.3.2")
+    implementation("coop.stlma.tech.protocolsn:keycloak-api:0.3.3")
     implementation("coop.stlma.tech.protocolsn:plugin-lib:0.3.0")
     implementation project(':user-plugin-api')
 

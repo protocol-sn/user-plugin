@@ -15,6 +15,7 @@ public class UserQueryCriteria {
     private Boolean approved;
     private Boolean verified;
     private Boolean requestsVerification;
+    private String search;
 
     public String parseToQ() {
         StringBuilder sb = new StringBuilder();

@@ -77,9 +77,9 @@ class UserControllerTest {
 
         ArgumentCaptor<UserQueryCriteria> captor = ArgumentCaptor.forClass(UserQueryCriteria.class);
         List<PsnUser> returnedUsers = List.of(
-                new PsnUser("one", "user1", null, null, null, true, null, null),
-                new PsnUser("two", "user2", null, null, null, true, null, null),
-                new PsnUser("three", "user3", null, null, null, true, null, null)
+                PsnUser.builder().id("one").username("user1").build(),
+                PsnUser.builder().id("two").username("user2").build(),
+                PsnUser.builder().id("three").username("user3").build()
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
@@ -97,11 +97,11 @@ class UserControllerTest {
         List<PsnUser> responseBody  = queryResponse.getBody(Argument.listOf(PsnUser.class)).get();
         Assertions.assertEquals(3, responseBody.size());
         responseBody = responseBody.stream()
-                .sorted(Comparator.comparing(PsnUser::username)).toList();
+                .sorted(Comparator.comparing(PsnUser::getUsername)).toList();
 
-        Assertions.assertEquals("user1", responseBody.get(0).username());
-        Assertions.assertEquals("user2", responseBody.get(1).username());
-        Assertions.assertEquals("user3", responseBody.get(2).username());
+        Assertions.assertEquals("user1", responseBody.get(0).getUsername());
+        Assertions.assertEquals("user2", responseBody.get(1).getUsername());
+        Assertions.assertEquals("user3", responseBody.get(2).getUsername());
     }
 
     @Test
@@ -114,7 +114,7 @@ class UserControllerTest {
 
         ArgumentCaptor<UserQueryCriteria> captor = ArgumentCaptor.forClass(UserQueryCriteria.class);
         List<PsnUser> returnedUsers = List.of(
-                new PsnUser("one", "user1", null, null, null, true, null, null)
+                PsnUser.builder().id("one").username("user1").build()
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
@@ -132,7 +132,7 @@ class UserControllerTest {
         List<PsnUser> responseBody  = queryResponse.getBody(Argument.listOf(PsnUser.class)).get();
         Assertions.assertEquals(1, responseBody.size());
 
-        Assertions.assertEquals("user1", responseBody.get(0).username());
+        Assertions.assertEquals("user1", responseBody.get(0).getUsername());
     }
 
     @Test
@@ -177,9 +177,9 @@ class UserControllerTest {
 
         ArgumentCaptor<UserQueryCriteria> captor = ArgumentCaptor.forClass(UserQueryCriteria.class);
         List<PsnUser> returnedUsers = List.of(
-                new PsnUser("one", "user1", null, null, null, true, null, null),
-                new PsnUser("two", "user2", null, null, null, true, null, null),
-                new PsnUser("three", "user3", null, null, null, true, null, null)
+                PsnUser.builder().id("one").username("user1").build(),
+                PsnUser.builder().id("two").username("user2").build(),
+                PsnUser.builder().id("three").username("user3").build()
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
@@ -197,11 +197,11 @@ class UserControllerTest {
         List<PsnUser> responseBody  = queryResponse.getBody(Argument.listOf(PsnUser.class)).get();
         Assertions.assertEquals(3, responseBody.size());
         responseBody = responseBody.stream()
-                .sorted(Comparator.comparing(PsnUser::username)).toList();
+                .sorted(Comparator.comparing(PsnUser::getUsername)).toList();
 
-        Assertions.assertEquals("user1", responseBody.get(0).username());
-        Assertions.assertEquals("user2", responseBody.get(1).username());
-        Assertions.assertEquals("user3", responseBody.get(2).username());
+        Assertions.assertEquals("user1", responseBody.get(0).getUsername());
+        Assertions.assertEquals("user2", responseBody.get(1).getUsername());
+        Assertions.assertEquals("user3", responseBody.get(2).getUsername());
     }
 
     @Test
@@ -219,8 +219,7 @@ class UserControllerTest {
     void testGetUser_happyPath() {
         Mockito.when(userServiceMock.getUser(userId))
                 .thenReturn(
-                        Mono.just(new PsnUser("one", "user1", null, null, null,
-                                true, null, null)));
+                        Mono.just(PsnUser.builder().id("one").username("user1").build()));
 
         HttpRequest<?> finalRequest = HttpRequest.GET(UserOperations.GET_USER_PATH.replace("{userId}", userId.toString()))
                 .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
@@ -228,7 +227,7 @@ class UserControllerTest {
         HttpResponse<PsnUser> result = httpClient.toBlocking().exchange(finalRequest, PsnUser.class);
 
         Assertions.assertEquals(HttpStatus.OK, result.getStatus());
-        Assertions.assertEquals("user1", result.getBody().get().username());
+        Assertions.assertEquals("user1", result.getBody().get().getUsername());
     }
 
     @Test
@@ -246,8 +245,7 @@ class UserControllerTest {
     void testGetUser_nonAdminCanGetSelf() {
         Mockito.when(userServiceMock.getUser(TEST_USER_ID))
                 .thenReturn(
-                        Mono.just(new PsnUser("one", "user1", null, null, null,
-                                true, null, null)));
+                        Mono.just(PsnUser.builder().id("one").username("user1").build()));
 
         HttpRequest<?> finalRequest = HttpRequest.GET(UserOperations.GET_USER_PATH.replace("{userId}", TEST_USER_ID.toString()))
                 .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
@@ -255,6 +253,6 @@ class UserControllerTest {
         HttpResponse<PsnUser> result = httpClient.toBlocking().exchange(finalRequest, PsnUser.class);
 
         Assertions.assertEquals(HttpStatus.OK, result.getStatus());
-        Assertions.assertEquals("user1", result.getBody().get().username());
+        Assertions.assertEquals("user1", result.getBody().get().getUsername());
     }
 }

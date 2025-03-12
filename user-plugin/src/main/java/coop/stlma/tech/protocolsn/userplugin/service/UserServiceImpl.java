@@ -1,9 +1,11 @@
 package coop.stlma.tech.protocolsn.userplugin.service;
 
 import coop.stlma.tech.protocolsn.keycloak.client.KeycloakAdminClient;
+import coop.stlma.tech.protocolsn.keycloak.domain.GroupRepresentation;
 import coop.stlma.tech.protocolsn.keycloak.domain.UserRepresentation;
 import coop.stlma.tech.protocolsn.registration.model.PsnUser;
 import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.util.GroupUtil;
 import coop.stlma.tech.protocolsn.userplugin.util.UserUtil;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
@@ -38,7 +40,7 @@ public class UserServiceImpl implements UserService {
     public Flux<PsnUser> queryUsers(UserQueryCriteria query) {
         return keycloakAdminClient.queryUsers(keycloakRealm, null, null, null, null, null,
                 query.getOffset() == null ? 0 : query.getOffset(), null, null, null, null,
-                query.getLimit() == null ? 25 : query.getLimit(), query.parseToQ(), null, null)
+                query.getLimit() == null ? 25 : query.getLimit(), query.parseToQ(), query.getSearch(), null)
                 .map(listHttpResponse -> {
                     log.debug("Got {} users", listHttpResponse.body().size());
                     return listHttpResponse.body();
@@ -47,18 +49,11 @@ public class UserServiceImpl implements UserService {
                     List<PsnUser> users = new ArrayList<>();
                     userRepresentations.forEach(userRepresentation -> {
                         log.debug("Got user: {}", userRepresentation.getUsername());
-                        users.add(new PsnUser(
-                                userRepresentation.getId(),
-                                userRepresentation.getUsername(),
-                                userRepresentation.getEmail(),
-                                UserUtil.findAttribute(userRepresentation, "given_name"),
-                                UserUtil.findAttribute(userRepresentation, "family_name"),
-                                UserUtil.findAttributeAsBoolean(userRepresentation, "approved"),
-                                UserUtil.findAttributeAsBoolean(userRepresentation, "verified"),
-                                UserUtil.findAttributeAsBoolean(userRepresentation, "requests-verification")));
+                        users.add(UserUtil.represenationToUser(userRepresentation));
                     });
                     return users;
-                });
+                })
+                .flatMap(this::addGroupsToUser);
     }
 
     @Override
@@ -85,15 +80,20 @@ public class UserServiceImpl implements UserService {
             .map(userRepresentationHttpResponse -> {
                 UserRepresentation userRepresentation = userRepresentationHttpResponse.body();
                 log.debug("Got user: {}", userRepresentation.getUsername());
-                return new PsnUser(
-                        userRepresentation.getId(),
-                        userRepresentation.getUsername(),
-                        userRepresentation.getEmail(),
-                        UserUtil.findAttribute(userRepresentation, "given_name"),
-                        UserUtil.findAttribute(userRepresentation, "family_name"),
-                        UserUtil.findAttributeAsBoolean(userRepresentation, "approved"),
-                        UserUtil.findAttributeAsBoolean(userRepresentation, "verified"),
-                        UserUtil.findAttributeAsBoolean(userRepresentation, "requests-verification"));
-            });
+                return UserUtil.represenationToUser(userRepresentation);
+
+            })
+            .flatMap(this::addGroupsToUser);
     }
+
+    private Mono<PsnUser> addGroupsToUser(PsnUser psnUser) {
+        return keycloakAdminClient.getUserGroups(keycloakRealm, psnUser.getId(), true, 0, 25, null)
+                .map(listHttpResponse -> {
+                    List<GroupRepresentation> responseBody = listHttpResponse.body();
+                    psnUser.setGroupMembership(responseBody.stream().map(GroupUtil::toUserGroup).toList());
+                    return psnUser;
+                });
+    }
+
+
 }

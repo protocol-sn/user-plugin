@@ -1,6 +1,9 @@
 package coop.stlma.tech.protocolsn.userplugin.util;
 
 import coop.stlma.tech.protocolsn.keycloak.domain.GroupRepresentation;
+import coop.stlma.tech.protocolsn.registration.model.UserGroup;
+
+import java.util.UUID;
 
 public class GroupUtil {
     private GroupUtil() {}
@@ -15,9 +18,14 @@ public class GroupUtil {
     }
 
     public static Boolean findAttributeAsBoolean(GroupRepresentation groupRepresentation, String attribute) {
-        if (groupRepresentation.getAttributes() != null && groupRepresentation.getAttributes().containsKey(attribute) && !groupRepresentation.getAttributes().get(attribute).isEmpty()) {
-            return Boolean.parseBoolean(groupRepresentation.getAttributes().get(attribute).getFirst());
-        }
-        return null;
+        return Boolean.parseBoolean(findAttribute(groupRepresentation, attribute));
+    }
+
+    public static UserGroup toUserGroup(GroupRepresentation groupRepresentation) {
+        UserGroup userGroup = new UserGroup();
+        userGroup.setId(UUID.fromString(groupRepresentation.getId()));
+        userGroup.setGroupName(groupRepresentation.getName());
+        userGroup.setNewUserDefault(findAttributeAsBoolean(groupRepresentation, "default"));
+        return userGroup;
     }
 }
