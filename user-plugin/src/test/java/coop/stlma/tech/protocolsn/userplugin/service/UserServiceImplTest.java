@@ -68,6 +68,7 @@ class UserServiceImplTest {
         UserQueryCriteria query = UserQueryCriteria.builder()
                 .limit(5)
                 .offset(0)
+                .search("-user")
                 .build();
 
         List<UserRepresentation> expectedReps = List.of(
@@ -81,21 +82,30 @@ class UserServiceImplTest {
         Mockito.when(keycloakApiMock.queryUsers(Mockito.eq("social-network-ecosystem"), Mockito.isNull(), Mockito.isNull(),
                         Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(0), Mockito.isNull(),
                         Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(5), Mockito.eq(query.parseToQ()),
-                        Mockito.isNull(), Mockito.isNull()))
+                        Mockito.eq("-user"), Mockito.isNull()))
                 .thenReturn(Mono.just(HttpResponse.ok(expectedReps)));
+
+        Mockito.when(keycloakApiMock.getUserGroups(
+                Mockito.eq("social-network-ecosystem"), Mockito.any(), Mockito.eq(true), Mockito.eq(0),
+                        Mockito.eq(25), Mockito.isNull()))
+                .thenReturn(Mono.just(HttpResponse.ok(TestUtil.buildUserGroupRepresentations(2))));
 
         List<PsnUser> result = userVerificationService.queryUsers(query).collectList().block();
 
         Assertions.assertEquals(5, result.size());
         result = result.stream()
-                .sorted(Comparator.comparing(PsnUser::username))
+                .sorted(Comparator.comparing(PsnUser::getUsername))
                 .toList();
 
-        Assertions.assertEquals("user1", result.get(0).username());
-        Assertions.assertEquals("user2", result.get(1).username());
-        Assertions.assertEquals("user3", result.get(2).username());
-        Assertions.assertEquals("user4", result.get(3).username());
-        Assertions.assertEquals("user5", result.get(4).username());
+        Assertions.assertEquals("user1", result.get(0).getUsername());
+        Assertions.assertEquals("user2", result.get(1).getUsername());
+        Assertions.assertEquals("user3", result.get(2).getUsername());
+        Assertions.assertEquals("user4", result.get(3).getUsername());
+        Assertions.assertEquals("user5", result.get(4).getUsername());
+
+        Assertions.assertEquals(2, result.get(0).getGroupMembership().size());
+        Assertions.assertEquals("TestGroup1", result.get(0).getGroupMembership().get(0).getGroupName());
+        Assertions.assertEquals("TestGroup2", result.get(0).getGroupMembership().get(1).getGroupName());
     }
 
     @Test
@@ -134,5 +144,21 @@ class UserServiceImplTest {
         List<PsnUser> result = userVerificationService.queryUsers(query).collectList().block();
 
         Assertions.assertEquals(0, result.size());
+    }
+
+    @Test
+    void testGetUser_happyPath() {
+        UserRepresentation user1 = TestUtil.buildUserRepresentation("user1");
+        Mockito.when(keycloakApiMock.getUser("social-network-ecosystem", USER_ID.toString()))
+                .thenReturn(Mono.just(HttpResponse.ok(user1)));
+        Mockito.when(keycloakApiMock.getUserGroups("social-network-ecosystem", user1.getId(), true, 0, 25, null))
+                .thenReturn(Mono.just(HttpResponse.ok(TestUtil.buildUserGroupRepresentations(2))));
+
+        PsnUser result = userVerificationService.getUser(USER_ID).block();
+
+        Assertions.assertEquals("user1", result.getUsername());
+        Assertions.assertEquals(2, result.getGroupMembership().size());
+        Assertions.assertEquals("TestGroup1", result.getGroupMembership().get(0).getGroupName());
+        Assertions.assertEquals("TestGroup2", result.getGroupMembership().get(1).getGroupName());
     }
 }
