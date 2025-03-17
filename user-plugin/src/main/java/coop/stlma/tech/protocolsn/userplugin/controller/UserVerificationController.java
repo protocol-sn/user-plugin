@@ -21,6 +21,11 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Controller for user verification
+ *
+ * @author John Meyerin
+ */
 @Controller
 public class UserVerificationController implements UserVerificationOperations {
 
@@ -32,6 +37,12 @@ public class UserVerificationController implements UserVerificationOperations {
         this.userService = userService;
     }
 
+    /**
+     * Flag the given user as verified
+     *
+     * @param userId    Id of the user
+     * @return          200 OK
+     */
     @Put(UserVerificationOperations.VERIFY_USER_PATH)
     @RolesAllowed(UserVerificationOperations.VERIFY_USER_ROLE)
     @Override
@@ -40,6 +51,11 @@ public class UserVerificationController implements UserVerificationOperations {
                 .thenReturn(HttpResponse.ok());
     }
 
+    /**
+     * Flag the given user as needing verification
+     * @param userId    Id of the user
+     * @return          200 OK
+     */
     @Post(UserVerificationOperations.REQUEST_VERIFICATION_PATH)
     @RolesAllowed(CommonRoles.LOGGED_IN_USER)
     @Override
@@ -48,6 +64,10 @@ public class UserVerificationController implements UserVerificationOperations {
                 .thenReturn(HttpResponse.ok());
     }
 
+    /**
+     * List users pending verification. Convenience method for @Link{UserController#queryUsers(UserQueryCriteria)}
+     * @return  List of users pending verification
+     */
     @Get(UserVerificationOperations.PENDING_VERIFICATION_PATH)
     @RolesAllowed(UserVerificationOperations.VERIFY_USER_ROLE)
     @Override
