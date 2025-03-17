@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Default implementation of @link{UserGroupsService}
+ *
+ * @author John Meyerin
+ */
 @Singleton
 @Slf4j
 public class UserGroupsServiceImpl implements UserGroupsService {
@@ -28,28 +33,55 @@ public class UserGroupsServiceImpl implements UserGroupsService {
         this.keycloakRealm = keycloakRealm;
     }
 
+    /**
+     * Add a given user to a given group
+     * @param userId    Id of the user
+     * @param groupId   Id of the group
+     * @return          empty
+     */
     @Override
     public Mono<Void> addUserToGroup(UUID userId, UUID groupId) {
         return keycloakAdminClient.addUserToGroup(keycloakRealm, userId.toString(), groupId.toString())
                 .then();
     }
 
+    /**
+     * Remove a user from a given group
+     * @param userId    Id of the user
+     * @param groupId   Id of the group
+     * @return          empty
+     */
     @Override
     public Mono<Void> removeUserFromGroup(UUID userId, UUID groupId) {
         return keycloakAdminClient.removeUserFromGroup(keycloakRealm, userId.toString(), groupId.toString())
                 .then();
     }
 
+    /**
+     * Add a group to the list of default groups
+     * @param groupId   Id of the group
+     * @return          empty
+     */
     @Override
     public Mono<Void> addGroupToDefaults(UUID groupId) {
         return setGroupAttribute(groupId, "default", List.of("true"));
     }
 
+    /**
+     * Remove a group from the list of default groups
+     * @param groupId   Id of the group
+     * @return          empty
+     */
     @Override
     public Mono<Void> removeGroupFromDefault(UUID groupId) {
         return setGroupAttribute(groupId, "default", List.of("false"));
     }
 
+    /**
+     * Query the groups based on a given set of criteria
+     * @param query     Query criteria
+     * @return          Groups who meet the query criteria
+     */
     @Override
     public Flux<UserGroup> queryGroups(GroupQueryCriteria query) {
         return keycloakAdminClient.queryGroups(keycloakRealm,
@@ -68,6 +100,13 @@ public class UserGroupsServiceImpl implements UserGroupsService {
                 });
     }
 
+    /**
+     * Set the value of an attribute for a group, or create the attribute if it doesn't exist
+     * @param groupId       Id of the group
+     * @param attribute     Name of the attribute
+     * @param value         New value of the attribute
+     * @return              empty
+     */
     @Override
     public Mono<Void> setGroupAttribute(UUID groupId, String attribute, List<String> value) {
         return keycloakAdminClient.getGroup(keycloakRealm, groupId.toString())

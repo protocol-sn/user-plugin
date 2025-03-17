@@ -7,6 +7,11 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import jakarta.inject.Singleton;
 
+/**
+ * Handle @link {UserLacksRoleException}
+ *
+ * @author John Meyerin
+ */
 @Singleton
 public class UserLacksRoleExceptionHandler implements ExceptionHandler<UserLacksRoleException, HttpResponse> {
     @Override

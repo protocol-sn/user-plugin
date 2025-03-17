@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Query criteria for users
+ *
+ * @author John Meyerin
+ */
 @Builder
 @Getter
 @Setter
@@ -17,6 +22,10 @@ public class UserQueryCriteria {
     private Boolean requestsVerification;
     private String search;
 
+    /**
+     * Parse the values into the 'q' parameter of the Keycloak query
+     * @return  Space-separated string of key/value pairs
+     */
     public String parseToQ() {
         StringBuilder sb = new StringBuilder();
         if (approved != null) {

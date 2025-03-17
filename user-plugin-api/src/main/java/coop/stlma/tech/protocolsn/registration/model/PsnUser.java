@@ -9,6 +9,11 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * Standardized representation of a PSN user
+ *
+ * @author John Meyerin
+ */
 @Serdeable
 @Builder
 @AllArgsConstructor

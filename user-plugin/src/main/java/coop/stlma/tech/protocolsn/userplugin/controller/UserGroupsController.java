@@ -20,6 +20,11 @@ import java.util.UUID;
 
 import static coop.stlma.tech.protocolsn.registration.api.UserOperations.NODE_USER_ADMIN;
 
+/**
+ * Controller for interactions between users and groups
+ *
+ * @author John Meyerin
+ */
 @Controller
 public class UserGroupsController implements UserGroupsOperations {
 
@@ -29,6 +34,12 @@ public class UserGroupsController implements UserGroupsOperations {
         this.userGroupsService = userGroupsService;
     }
 
+    /**
+     * Add the given user to the given group
+     * @param userId    Id of the user
+     * @param groupId   Id of the group
+     * @return          200 OK
+     */
     @Put(ADD_USER_TO_GROUP_PATH)
     @Secured(NODE_USER_GROUP_MANAGEMENT_ROLE)
     @Override
@@ -37,6 +48,12 @@ public class UserGroupsController implements UserGroupsOperations {
                 .thenReturn(HttpResponse.ok());
     }
 
+    /**
+     * Remove a user from a group
+     * @param userId    Id of the user
+     * @param groupId   Id of the group
+     * @return          200 OK
+     */
     @Delete(REMOVE_USER_FROM_GROUP_PATH)
     @Secured(NODE_USER_GROUP_MANAGEMENT_ROLE)
     @Override
@@ -45,6 +62,11 @@ public class UserGroupsController implements UserGroupsOperations {
                 .thenReturn(HttpResponse.ok());
     }
 
+    /**
+     * Add a group to the groups considered default for a user on approval
+     * @param groupId   Id of the group
+     * @return          200 OK
+     */
     @Post(ADD_GROUP_TO_DEFAULTS)
     @Secured(NODE_USER_GROUP_MANAGEMENT_ROLE)
     public Mono<HttpResponse<Void>> addGroupsToDefaults(@PathVariable("groupId") UUID groupId) {
@@ -52,6 +74,11 @@ public class UserGroupsController implements UserGroupsOperations {
                 .thenReturn(HttpResponse.ok());
     }
 
+    /**
+     * Remove a group from the groups considered default for a user on approval
+     * @param groupId   Id of the group
+     * @return          200 OK
+     */
     @Delete(REMOVE_GROUP_FROM_DEFAULTS)
     @Secured(NODE_USER_GROUP_MANAGEMENT_ROLE)
     @Override
@@ -60,6 +87,10 @@ public class UserGroupsController implements UserGroupsOperations {
                 .thenReturn(HttpResponse.ok());
     }
 
+    /**
+     * Get list of groups designated as default for a newly approved user. Convenience method of @link{#getGroups(GroupQueryCriteria)}
+     * @return  List of groups
+     */
     @Get(GET_DEFAULT_GROUPS_PATH)
     @Secured({NODE_USER_GROUP_MANAGEMENT_ROLE, NODE_USER_ADMIN})
     @Override
@@ -71,6 +102,11 @@ public class UserGroupsController implements UserGroupsOperations {
                 .map(HttpResponse::ok);
     }
 
+    /**
+     * Query the groups
+     * @param query     Query criteria
+     * @return          Groups who meet the query criteria
+     */
     @Post(GET_GROUPS_PATH)
     @Secured({NODE_USER_GROUP_MANAGEMENT_ROLE, NODE_USER_ADMIN})
     @Override

@@ -7,7 +7,6 @@ import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
 import coop.stlma.tech.protocolsn.userplugin.error.UserLacksRoleException;
 import coop.stlma.tech.protocolsn.userplugin.service.UserService;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -19,10 +18,14 @@ import io.micronaut.security.utils.SecurityService;
 import jakarta.annotation.security.RolesAllowed;
 import reactor.core.publisher.Mono;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Controller for interactions with users
+ *
+ * @author John Meyerin
+ */
 @Controller
 public class UserController implements UserOperations {
 
@@ -35,6 +38,11 @@ public class UserController implements UserOperations {
         this.securityService = securityService;
     }
 
+    /**
+     * Approve a user
+     * @param userId    Id of the user
+     * @return          200 OK
+     */
     @Put(UserOperations.APPROVE_PATH)
     @RolesAllowed(UserOperations.APPROVE_ROLE)
     @Override
@@ -43,6 +51,12 @@ public class UserController implements UserOperations {
                 .thenReturn(HttpResponse.ok());
     }
 
+    /**
+     * Query users
+     *
+     * @param query     Query criteria
+     * @return          Users who meet the query criteria
+     */
     @Post(UserOperations.QUERY_PATH)
     @RolesAllowed(UserOperations.QUERY_ROLE)
     @Override
@@ -52,6 +66,12 @@ public class UserController implements UserOperations {
                 .map(HttpResponse::ok);
     }
 
+    /**
+     * List users pending approval. Convenience method for @Link{#queryUsers(UserQueryCriteria)}
+     * @param limit     Number of records to retrieve
+     * @param offset    Starting offset e.g. page
+     * @return          List of users pending approval
+     */
     @Get(UserOperations.PENDING_APPROVAL_PATH)
     @RolesAllowed(UserOperations.PENDING_APPROVAL_ROLE)
     @Override
@@ -67,6 +87,11 @@ public class UserController implements UserOperations {
                 .map(HttpResponse::ok);
     }
 
+    /**
+     * Get a user by id
+     * @param userId    Id of the user
+     * @return          The requested user
+     */
     @Override
     @RolesAllowed({CommonRoles.LOGGED_IN_USER, UserOperations.NODE_USER_ADMIN})
     @Get(UserOperations.GET_USER_PATH)

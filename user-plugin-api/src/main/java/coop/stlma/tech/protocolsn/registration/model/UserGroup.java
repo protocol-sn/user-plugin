@@ -5,6 +5,11 @@ import lombok.Data;
 
 import java.util.UUID;
 
+/**
+ * Standard representation of user groups
+ *
+ * @author John Meyerin
+ */
 @Serdeable
 @Data
 public class UserGroup {

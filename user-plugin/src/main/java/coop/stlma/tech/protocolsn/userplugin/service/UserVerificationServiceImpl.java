@@ -11,6 +11,11 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Default implementation of @link{UserVerificationService}
+ *
+ * @author John Meyerin
+ */
 @Singleton
 public class UserVerificationServiceImpl implements UserVerificationService {
 
@@ -26,6 +31,11 @@ public class UserVerificationServiceImpl implements UserVerificationService {
         this.keycloakRealm = keycloakRealm;
     }
 
+    /**
+     * Flag the given user as verified
+     * @param userId    Id of the user
+     * @return          empty
+     */
     @Override
     public Mono<Void> verifyUser(UUID userId) {
         return userService.setUserAttribute(userId, "verified", List.of("true"))
@@ -33,6 +43,11 @@ public class UserVerificationServiceImpl implements UserVerificationService {
                         userService.setUserAttribute(userId, "requests-verification", List.of("false"))));
     }
 
+    /**
+     * Flag the given user as requesting verification
+     * @param userId    Id of the user
+     * @return          empty
+     */
     @Override
     public Mono<Void> requestVerification(UUID userId) {
         return keycloakAdminClient.getUser(keycloakRealm, userId.toString())

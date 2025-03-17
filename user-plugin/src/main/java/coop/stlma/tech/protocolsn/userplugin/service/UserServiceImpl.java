@@ -18,6 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Default implementation of @link{UserService}
+ *
+ * @author John Meyerin
+ */
 @Singleton
 @Slf4j
 public class UserServiceImpl implements UserService {
@@ -31,11 +36,21 @@ public class UserServiceImpl implements UserService {
         this.keycloakRealm = keycloakRealm;
     }
 
+    /**
+     * Flag the given user as approved
+     * @param userId    Id of the user
+     * @return          empty
+     */
     @Override
     public Mono<Void> approveUser(UUID userId) {
         return setUserAttribute(userId, "approved", List.of("true"));
     }
 
+    /**
+     * Query the users based on a given set of criteria
+     * @param query     Query criteria
+     * @return          Users who meet the query criteria
+     */
     @Override
     public Flux<PsnUser> queryUsers(UserQueryCriteria query) {
         return keycloakAdminClient.queryUsers(keycloakRealm, null, null, null, null, null,
@@ -49,13 +64,20 @@ public class UserServiceImpl implements UserService {
                     List<PsnUser> users = new ArrayList<>();
                     userRepresentations.forEach(userRepresentation -> {
                         log.debug("Got user: {}", userRepresentation.getUsername());
-                        users.add(UserUtil.represenationToUser(userRepresentation));
+                        users.add(UserUtil.representationToUser(userRepresentation));
                     });
                     return users;
                 })
                 .flatMap(this::addGroupsToUser);
     }
 
+    /**
+     * Set the value of an attribute for a user, or create the attribute if it doesn't exist
+     * @param userId    Id of the user
+     * @param attribute Attribute to set/change the value of
+     * @param value     New value of the attribnute
+     * @return          empty
+     */
     @Override
     public Mono<Void> setUserAttribute(UUID userId, String attribute, List<String> value) {
         return keycloakAdminClient.getUser(keycloakRealm, userId.toString())
@@ -74,13 +96,18 @@ public class UserServiceImpl implements UserService {
                 }).then();
     }
 
+    /**
+     * Get a user by id
+     * @param userId    Id of the user
+     * @return          The requested user
+     */
     @Override
     public Mono<PsnUser> getUser(UUID userId) {
         return keycloakAdminClient.getUser(keycloakRealm, userId.toString())
             .map(userRepresentationHttpResponse -> {
                 UserRepresentation userRepresentation = userRepresentationHttpResponse.body();
                 log.debug("Got user: {}", userRepresentation.getUsername());
-                return UserUtil.represenationToUser(userRepresentation);
+                return UserUtil.representationToUser(userRepresentation);
 
             })
             .flatMap(this::addGroupsToUser);
