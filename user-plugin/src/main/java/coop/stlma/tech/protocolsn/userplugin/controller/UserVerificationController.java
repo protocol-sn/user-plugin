@@ -1,6 +1,5 @@
 package coop.stlma.tech.protocolsn.userplugin.controller;
 
-import coop.stlma.tech.protocolsn.pluginlib.security.CommonRoles;
 import coop.stlma.tech.protocolsn.registration.api.UserVerificationOperations;
 import coop.stlma.tech.protocolsn.registration.model.PsnUser;
 import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
@@ -15,6 +14,8 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import jakarta.annotation.security.RolesAllowed;
 import reactor.core.publisher.Mono;
 
@@ -57,7 +58,7 @@ public class UserVerificationController implements UserVerificationOperations {
      * @return          200 OK
      */
     @Post(UserVerificationOperations.REQUEST_VERIFICATION_PATH)
-    @RolesAllowed(CommonRoles.LOGGED_IN_USER)
+    @Secured(SecurityRule.IS_AUTHENTICATED)
     @Override
     public Mono<HttpResponse<Void>> requestVerification(@PathVariable("userId") UUID userId) {
         return userVerificationService.requestVerification(userId)

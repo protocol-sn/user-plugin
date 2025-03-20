@@ -13,9 +13,9 @@ import jakarta.inject.Singleton;
  * @author John Meyerin
  */
 @Singleton
-public class UserLacksRoleExceptionHandler implements ExceptionHandler<UserLacksRoleException, HttpResponse> {
+public class UserLacksRoleExceptionHandler implements ExceptionHandler<UserLacksRoleException, HttpResponse<?>> {
     @Override
-    public HttpResponse handle(HttpRequest request, UserLacksRoleException exception) {
+    public HttpResponse<?> handle(HttpRequest request, UserLacksRoleException exception) {
         return HttpResponse.status(HttpStatus.FORBIDDEN);
     }
 }
