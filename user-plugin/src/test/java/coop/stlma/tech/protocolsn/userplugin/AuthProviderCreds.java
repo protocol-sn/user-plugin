@@ -1,6 +1,5 @@
 package coop.stlma.tech.protocolsn.userplugin;
 
-import coop.stlma.tech.protocolsn.pluginlib.security.CommonRoles;
 import coop.stlma.tech.protocolsn.registration.api.UserGroupsOperations;
 import coop.stlma.tech.protocolsn.registration.api.UserOperations;
 import coop.stlma.tech.protocolsn.registration.api.UserVerificationOperations;
@@ -13,6 +12,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.provider.HttpRequestAuthenticationProvider;
 import jakarta.inject.Singleton;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -32,15 +32,14 @@ public class AuthProviderCreds<B> implements HttpRequestAuthenticationProvider<B
                             Map.of("roles",
                                     List.of(UserOperations.NODE_USER_ADMIN,
                                             UserGroupsOperations.NODE_USER_GROUP_MANAGEMENT_ROLE,
-                                            UserVerificationOperations.VERIFY_USER_ROLE,
-                                            CommonRoles.LOGGED_IN_USER)),
-                    "sub", ADMIN_USER_ID.toString()));
+                                            UserVerificationOperations.VERIFY_USER_ROLE),
+                    "sub", ADMIN_USER_ID.toString())));
         }
         if (authRequest.getIdentity().equals("TestUser") && authRequest.getSecret().equals("TestPass")) {
             return AuthenticationResponse.success("TestUser",
                     Map.of("realm_access",
                             Map.of("roles",
-                                    List.of(CommonRoles.LOGGED_IN_USER)),
+                                    Collections.emptyList()),
                             "sub", TEST_USER_ID.toString()));
         }
         return AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);

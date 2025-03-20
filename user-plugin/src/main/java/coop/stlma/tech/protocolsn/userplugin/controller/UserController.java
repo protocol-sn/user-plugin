@@ -1,6 +1,5 @@
 package coop.stlma.tech.protocolsn.userplugin.controller;
 
-import coop.stlma.tech.protocolsn.pluginlib.security.CommonRoles;
 import coop.stlma.tech.protocolsn.registration.api.UserOperations;
 import coop.stlma.tech.protocolsn.registration.model.PsnUser;
 import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
@@ -14,6 +13,8 @@ import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.utils.SecurityService;
 import jakarta.annotation.security.RolesAllowed;
 import reactor.core.publisher.Mono;
@@ -93,7 +94,7 @@ public class UserController implements UserOperations {
      * @return          The requested user
      */
     @Override
-    @RolesAllowed({CommonRoles.LOGGED_IN_USER, UserOperations.NODE_USER_ADMIN})
+    @Secured(SecurityRule.IS_AUTHENTICATED)
     @Get(UserOperations.GET_USER_PATH)
     public Mono<HttpResponse<PsnUser>> getUser(@PathVariable("userId") UUID userId) {
         securityService.username().ifPresent(sub -> {
