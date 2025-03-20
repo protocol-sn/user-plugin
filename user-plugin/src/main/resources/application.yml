@@ -29,7 +29,7 @@ micronaut:
               url: http://localhost:9080/realms/social-network-ecosystem/protocol/openid-connect/certs
     oauth2:
       clients:
-        keycloak:
+        local-keycloak:
           client-id: user-plugin
           client-secret: user-plugin-secret
           openid:
