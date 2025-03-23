@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: ProtocolSNUserPlugin
+    name: ProtocolSNKeycloakUserPlugin
   server:
     cors:
       enabled: true
