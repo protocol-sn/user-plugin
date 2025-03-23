@@ -30,7 +30,7 @@ dependencies {
     //protocol-sn
     implementation("coop.stlma.tech.protocolsn:keycloak-api:0.3.3")
     implementation("coop.stlma.tech.protocolsn:plugin-lib:0.4.0")
-    implementation project(':user-plugin-api')
+    implementation("coop.stlma.tech.protocolsn:user-plugin-api:0.4.2")
 
     //serde
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
