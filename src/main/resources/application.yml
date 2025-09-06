@@ -68,10 +68,14 @@ coop:
     tech:
       protocolsn:
         plugin-name: ProtocolSNUserPlugin
-        plugin-host: http://localhost:8081
+        plugin-host: localhost
+        plugin-grpc-port: 8091
 
 logger:
   levels:
     coop.stlma.tech.protocolsn: DEBUG
     io.micronaut.security: DEBUG
-    io.micronaut.http: DEBUG
+
+grpc:
+  server:
+    port: 8091

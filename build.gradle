@@ -1,7 +1,7 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.micronaut.application") version "4.5.0"
-    id("io.micronaut.aot") version "4.5.0"
+    id("com.gradleup.shadow") version "8.3.7"
+    id("io.micronaut.application") version "4.5.4"
+    id("io.micronaut.aot") version "4.5.4"
 }
 
 version getProperty("projectVersion")
@@ -29,7 +29,8 @@ dependencies {
 
     //protocol-sn
     implementation("coop.stlma.tech.protocolsn:keycloak-api:0.3.3")
-    implementation("coop.stlma.tech.protocolsn:plugin-lib:0.4.0")
+    implementation("coop.stlma.tech.protocolsn:plugin-lib:0.5.0")
+    implementation("coop.stlma.tech.protocolsn:common-lib:0.5.0")
     implementation("coop.stlma.tech.protocolsn:user-plugin-api:0.4.2")
 
     //serde
@@ -60,7 +61,6 @@ dependencies {
 
     //testing
     testImplementation("io.micronaut:micronaut-http-client")
-    implementation("coop.stlma.tech.protocolsn:plugin-lib-api:0.4.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("io.micronaut.test:micronaut-test-junit5")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
