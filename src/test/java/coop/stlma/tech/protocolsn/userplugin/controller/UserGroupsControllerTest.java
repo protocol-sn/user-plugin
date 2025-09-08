@@ -1,8 +1,8 @@
 package coop.stlma.tech.protocolsn.userplugin.controller;
 
-import coop.stlma.tech.protocolsn.registration.api.UserGroupsOperations;
-import coop.stlma.tech.protocolsn.registration.model.GroupQueryCriteria;
-import coop.stlma.tech.protocolsn.registration.model.UserGroup;
+import coop.stlma.tech.protocolsn.userplugin.api.UserGroupsOperations;
+import coop.stlma.tech.protocolsn.userplugin.model.GroupQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.model.UserGroup;
 import coop.stlma.tech.protocolsn.userplugin.TestUtil;
 import coop.stlma.tech.protocolsn.userplugin.service.UserGroupsService;
 import io.micronaut.context.annotation.Primary;
@@ -59,7 +59,7 @@ class UserGroupsControllerTest {
         HttpRequest<?> request = HttpRequest.GET(UserGroupsOperations.GET_DEFAULT_GROUPS_PATH)
                 .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
 
-        HttpResponse<?> rsp = httpClient.toBlocking().exchange(request);
+        HttpResponse<?> rsp = httpClient.toBlocking().exchange(request, Argument.listOf(UserGroup.class));
 
         Assertions.assertEquals(HttpStatus.OK, rsp.getStatus());
 

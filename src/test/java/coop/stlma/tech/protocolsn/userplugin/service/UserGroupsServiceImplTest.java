@@ -2,8 +2,8 @@ package coop.stlma.tech.protocolsn.userplugin.service;
 
 import coop.stlma.tech.protocolsn.keycloak.client.KeycloakAdminClient;
 import coop.stlma.tech.protocolsn.keycloak.domain.GroupRepresentation;
-import coop.stlma.tech.protocolsn.registration.model.GroupQueryCriteria;
-import coop.stlma.tech.protocolsn.registration.model.UserGroup;
+import coop.stlma.tech.protocolsn.userplugin.model.GroupQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.model.UserGroup;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.test.annotation.MockBean;

@@ -2,7 +2,7 @@ package coop.stlma.tech.protocolsn.userplugin;
 
 import coop.stlma.tech.protocolsn.keycloak.domain.GroupRepresentation;
 import coop.stlma.tech.protocolsn.keycloak.domain.UserRepresentation;
-import coop.stlma.tech.protocolsn.registration.model.PsnUser;
+import coop.stlma.tech.protocolsn.userplugin.model.PsnUser;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;

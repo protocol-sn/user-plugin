@@ -1,8 +1,8 @@
 package coop.stlma.tech.protocolsn.userplugin;
 
-import coop.stlma.tech.protocolsn.registration.api.UserGroupsOperations;
-import coop.stlma.tech.protocolsn.registration.api.UserOperations;
-import coop.stlma.tech.protocolsn.registration.api.UserVerificationOperations;
+import coop.stlma.tech.protocolsn.userplugin.api.UserGroupsOperations;
+import coop.stlma.tech.protocolsn.userplugin.api.UserOperations;
+import coop.stlma.tech.protocolsn.userplugin.api.UserVerificationOperations;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;

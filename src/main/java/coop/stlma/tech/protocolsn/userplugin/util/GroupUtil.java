@@ -1,7 +1,8 @@
 package coop.stlma.tech.protocolsn.userplugin.util;
 
 import coop.stlma.tech.protocolsn.keycloak.domain.GroupRepresentation;
-import coop.stlma.tech.protocolsn.registration.model.UserGroup;
+import coop.stlma.tech.protocolsn.userplugin.UserGroupData;
+import coop.stlma.tech.protocolsn.userplugin.model.UserGroup;
 
 import java.util.UUID;
 
@@ -47,5 +48,18 @@ public class GroupUtil {
         userGroup.setGroupName(groupRepresentation.getName());
         userGroup.setNewUserDefault(findAttributeAsBoolean(groupRepresentation, "default"));
         return userGroup;
+    }
+
+    /**
+     * Translate the model user group to the grpc user group data
+     * @param userGroup     UserGroup as model
+     * @return              UserGroup as grpc data
+     */
+    public static UserGroupData userGroupDataFromUserGroup(UserGroup userGroup) {
+        return UserGroupData.newBuilder()
+                .setId(userGroup.getId().toString())
+                .setGroupName(userGroup.getGroupName())
+                .setNewUserDefault(userGroup.getNewUserDefault())
+                .build();
     }
 }

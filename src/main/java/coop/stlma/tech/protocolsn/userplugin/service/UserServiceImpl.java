@@ -3,9 +3,10 @@ package coop.stlma.tech.protocolsn.userplugin.service;
 import coop.stlma.tech.protocolsn.keycloak.client.KeycloakAdminClient;
 import coop.stlma.tech.protocolsn.keycloak.domain.GroupRepresentation;
 import coop.stlma.tech.protocolsn.keycloak.domain.UserRepresentation;
-import coop.stlma.tech.protocolsn.registration.model.PsnUser;
-import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.model.PsnUser;
+import coop.stlma.tech.protocolsn.userplugin.model.UserQueryCriteria;
 import coop.stlma.tech.protocolsn.userplugin.util.GroupUtil;
+import coop.stlma.tech.protocolsn.userplugin.util.ParseToQUtil;
 import coop.stlma.tech.protocolsn.userplugin.util.UserUtil;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
@@ -46,6 +47,18 @@ public class UserServiceImpl implements UserService {
         return setUserAttribute(userId, "approved", List.of("true"));
     }
 
+    @Override
+    public Flux<PsnUser> queryUsers(Integer offset, Integer limit, Boolean approved, Boolean verified, Boolean requestsVerification, String search) {
+        return queryUsers(UserQueryCriteria.builder()
+                .offset(offset)
+                .limit(limit)
+                .approved(approved)
+                .verified(verified)
+                .requestsVerification(requestsVerification)
+                .search(search)
+                .build());
+    }
+
     /**
      * Query the users based on a given set of criteria
      * @param query     Query criteria
@@ -55,7 +68,7 @@ public class UserServiceImpl implements UserService {
     public Flux<PsnUser> queryUsers(UserQueryCriteria query) {
         return keycloakAdminClient.queryUsers(keycloakRealm, null, null, null, null, null,
                 query.getOffset() == null ? 0 : query.getOffset(), null, null, null, null,
-                query.getLimit() == null ? 25 : query.getLimit(), query.parseToQ(), query.getSearch(), null)
+                query.getLimit() == null ? 25 : query.getLimit(), ParseToQUtil.parseToQ(query), query.getSearch(), null)
                 .map(listHttpResponse -> {
                     log.debug("Got {} users", listHttpResponse.body().size());
                     return listHttpResponse.body();

@@ -1,8 +1,8 @@
 package coop.stlma.tech.protocolsn.userplugin.controller;
 
-import coop.stlma.tech.protocolsn.registration.api.UserGroupsOperations;
-import coop.stlma.tech.protocolsn.registration.model.GroupQueryCriteria;
-import coop.stlma.tech.protocolsn.registration.model.UserGroup;
+import coop.stlma.tech.protocolsn.userplugin.api.UserGroupsOperations;
+import coop.stlma.tech.protocolsn.userplugin.model.GroupQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.model.UserGroup;
 import coop.stlma.tech.protocolsn.userplugin.service.UserGroupsService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 
-import static coop.stlma.tech.protocolsn.registration.api.UserOperations.NODE_USER_ADMIN;
+import static coop.stlma.tech.protocolsn.userplugin.api.UserOperations.NODE_USER_ADMIN;
 
 /**
  * Controller for interactions between users and groups

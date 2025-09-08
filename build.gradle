@@ -31,7 +31,7 @@ dependencies {
     implementation("coop.stlma.tech.protocolsn:keycloak-api:0.3.3")
     implementation("coop.stlma.tech.protocolsn:plugin-lib:0.5.0")
     implementation("coop.stlma.tech.protocolsn:common-lib:0.5.0")
-    implementation("coop.stlma.tech.protocolsn:user-plugin-api:0.4.2")
+    implementation("coop.stlma.tech.protocolsn:user-plugin-api:0.5.0")
 
     //serde
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
@@ -58,6 +58,16 @@ dependencies {
     //swagger
     annotationProcessor("io.micronaut.openapi:micronaut-openapi")
     implementation("io.micronaut.openapi:micronaut-openapi-annotations")
+
+    //grpc
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-services:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+    implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+    implementation("io.micronaut.grpc:micronaut-grpc-server-runtime")
+    testImplementation "io.grpc:grpc-testing:${grpcVersion}"
+    testImplementation "io.grpc:grpc-inprocess:${grpcVersion}"
 
     //testing
     testImplementation("io.micronaut:micronaut-http-client")
