@@ -2,9 +2,10 @@ package coop.stlma.tech.protocolsn.userplugin.service;
 
 import coop.stlma.tech.protocolsn.keycloak.client.KeycloakAdminClient;
 import coop.stlma.tech.protocolsn.keycloak.domain.UserRepresentation;
-import coop.stlma.tech.protocolsn.registration.model.PsnUser;
-import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.model.PsnUser;
+import coop.stlma.tech.protocolsn.userplugin.model.UserQueryCriteria;
 import coop.stlma.tech.protocolsn.userplugin.TestUtil;
+import coop.stlma.tech.protocolsn.userplugin.util.ParseToQUtil;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.test.annotation.MockBean;
@@ -81,7 +82,7 @@ class UserServiceImplTest {
 
         Mockito.when(keycloakApiMock.queryUsers(Mockito.eq("social-network-ecosystem"), Mockito.isNull(), Mockito.isNull(),
                         Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(0), Mockito.isNull(),
-                        Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(5), Mockito.eq(query.parseToQ()),
+                        Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(5), Mockito.eq(ParseToQUtil.parseToQ(query)),
                         Mockito.eq("-user"), Mockito.isNull()))
                 .thenReturn(Mono.just(HttpResponse.ok(expectedReps)));
 
@@ -119,7 +120,7 @@ class UserServiceImplTest {
 
         Mockito.when(keycloakApiMock.queryUsers(Mockito.eq("social-network-ecosystem"), Mockito.isNull(), Mockito.isNull(),
                         Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(0), Mockito.isNull(),
-                        Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(5), Mockito.eq(query.parseToQ()),
+                        Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(5), Mockito.eq(ParseToQUtil.parseToQ(query)),
                         Mockito.isNull(), Mockito.isNull()))
                 .thenReturn(Mono.just(HttpResponse.ok(expectedReps)));
 
@@ -137,7 +138,7 @@ class UserServiceImplTest {
 
         Mockito.when(keycloakApiMock.queryUsers(Mockito.eq("social-network-ecosystem"), Mockito.isNull(), Mockito.isNull(),
                         Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(0), Mockito.isNull(),
-                        Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(5), Mockito.eq(query.parseToQ()),
+                        Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.eq(5), Mockito.eq(ParseToQUtil.parseToQ(query)),
                         Mockito.isNull(), Mockito.isNull()))
                 .thenReturn(Mono.empty());
 

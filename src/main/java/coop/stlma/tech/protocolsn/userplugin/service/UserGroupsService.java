@@ -1,7 +1,7 @@
 package coop.stlma.tech.protocolsn.userplugin.service;
 
-import coop.stlma.tech.protocolsn.registration.model.GroupQueryCriteria;
-import coop.stlma.tech.protocolsn.registration.model.UserGroup;
+import coop.stlma.tech.protocolsn.userplugin.model.GroupQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.model.UserGroup;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

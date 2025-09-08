@@ -2,9 +2,10 @@ package coop.stlma.tech.protocolsn.userplugin.service;
 
 import coop.stlma.tech.protocolsn.keycloak.client.KeycloakAdminClient;
 import coop.stlma.tech.protocolsn.keycloak.domain.GroupRepresentation;
-import coop.stlma.tech.protocolsn.registration.model.GroupQueryCriteria;
-import coop.stlma.tech.protocolsn.registration.model.UserGroup;
+import coop.stlma.tech.protocolsn.userplugin.model.GroupQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.model.UserGroup;
 import coop.stlma.tech.protocolsn.userplugin.util.GroupUtil;
+import coop.stlma.tech.protocolsn.userplugin.util.ParseToQUtil;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +86,7 @@ public class UserGroupsServiceImpl implements UserGroupsService {
     @Override
     public Flux<UserGroup> queryGroups(GroupQueryCriteria query) {
         return keycloakAdminClient.queryGroups(keycloakRealm,
-                null, null, query.getOffset(), query.getLimit(), null, query.parseToQ(), null)
+                null, null, query.getOffset(), query.getLimit(), null, ParseToQUtil.parseToQ(query), null)
                 .flatMapIterable(listHttpResponse -> {
                     log.debug("Got {} groups", listHttpResponse.body().size());
                     return listHttpResponse.body();

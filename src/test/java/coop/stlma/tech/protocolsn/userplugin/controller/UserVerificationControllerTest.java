@@ -1,8 +1,8 @@
 package coop.stlma.tech.protocolsn.userplugin.controller;
 
-import coop.stlma.tech.protocolsn.registration.api.UserVerificationOperations;
-import coop.stlma.tech.protocolsn.registration.model.PsnUser;
-import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.api.UserVerificationOperations;
+import coop.stlma.tech.protocolsn.userplugin.model.PsnUser;
+import coop.stlma.tech.protocolsn.userplugin.model.UserQueryCriteria;
 import coop.stlma.tech.protocolsn.userplugin.TestUtil;
 import coop.stlma.tech.protocolsn.userplugin.error.UserManagementException;
 import coop.stlma.tech.protocolsn.userplugin.service.UserService;
@@ -31,7 +31,7 @@ import java.util.UUID;
 
 @MicronautTest
 class UserVerificationControllerTest {
-    public static UUID userId = UUID.nameUUIDFromBytes("controllerVerifyUserId".getBytes());
+    public static final UUID USER_ID = UUID.nameUUIDFromBytes("controllerVerifyUserId".getBytes());
 
     @MockBean
     @Primary
@@ -49,9 +49,9 @@ class UserVerificationControllerTest {
 
     @Test
     void testVerifyUser_happyPath() {
-        Mockito.when(userVerificationServiceMock.verifyUser(userId)).thenReturn(Mono.empty());
+        Mockito.when(userVerificationServiceMock.verifyUser(USER_ID)).thenReturn(Mono.empty());
 
-        HttpRequest<?> request = HttpRequest.PUT(UserVerificationOperations.VERIFY_USER_PATH.replace("{userId}", userId.toString()), "")
+        HttpRequest<?> request = HttpRequest.PUT(UserVerificationOperations.VERIFY_USER_PATH.replace("{userId}", USER_ID.toString()), "")
                 .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
 
         HttpResponse<?> rsp = httpClient.toBlocking().exchange(request);
@@ -62,7 +62,7 @@ class UserVerificationControllerTest {
     @Test
     void testVerifyUser_noRoles() {
 
-        HttpRequest<?> finalRequest = HttpRequest.PUT(UserVerificationOperations.VERIFY_USER_PATH.replace("{userId}", userId.toString()), "")
+        HttpRequest<?> finalRequest = HttpRequest.PUT(UserVerificationOperations.VERIFY_USER_PATH.replace("{userId}", USER_ID.toString()), "")
                 .bearerAuth(TestUtil.getTestUserAccessToken(httpClient));
 
         HttpClientResponseException result = Assertions.assertThrows(HttpClientResponseException.class,
@@ -73,9 +73,9 @@ class UserVerificationControllerTest {
 
     @Test
     void testRequestVerificationUser_alreadyVerified() {
-        Mockito.when(userVerificationServiceMock.requestVerification(userId)).thenReturn(Mono.error(new UserManagementException("User is already verified")));
+        Mockito.when(userVerificationServiceMock.requestVerification(USER_ID)).thenReturn(Mono.error(new UserManagementException("User is already verified")));
 
-        HttpRequest<?> request = HttpRequest.POST(UserVerificationOperations.REQUEST_VERIFICATION_PATH.replace("{userId}", userId.toString()), "")
+        HttpRequest<?> request = HttpRequest.POST(UserVerificationOperations.REQUEST_VERIFICATION_PATH.replace("{userId}", USER_ID.toString()), "")
                 .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient))
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -88,9 +88,9 @@ class UserVerificationControllerTest {
 
     @Test
     void testRequestVerificationUser_happyPath() {
-        Mockito.when(userVerificationServiceMock.requestVerification(userId)).thenReturn(Mono.empty());
+        Mockito.when(userVerificationServiceMock.requestVerification(USER_ID)).thenReturn(Mono.empty());
 
-        HttpRequest<?> request = HttpRequest.POST(UserVerificationOperations.REQUEST_VERIFICATION_PATH.replace("{userId}", userId.toString()), "")
+        HttpRequest<?> request = HttpRequest.POST(UserVerificationOperations.REQUEST_VERIFICATION_PATH.replace("{userId}", USER_ID.toString()), "")
                 .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient))
                 .accept(MediaType.APPLICATION_JSON);
 

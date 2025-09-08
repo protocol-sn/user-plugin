@@ -1,7 +1,12 @@
 package coop.stlma.tech.protocolsn.userplugin.util;
 
 import coop.stlma.tech.protocolsn.keycloak.domain.UserRepresentation;
-import coop.stlma.tech.protocolsn.registration.model.PsnUser;
+import coop.stlma.tech.protocolsn.userplugin.UserData;
+import coop.stlma.tech.protocolsn.userplugin.UserGroupData;
+import coop.stlma.tech.protocolsn.userplugin.model.PsnUser;
+
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Utilities for working with users
@@ -49,6 +54,32 @@ public class UserUtil {
                 .approved(findAttributeAsBoolean(userRepresentation, "approved"))
                 .verified(findAttributeAsBoolean(userRepresentation, "verified"))
                 .requestsVerification(findAttributeAsBoolean(userRepresentation, "requests-verification"))
+                .build();
+    }
+
+    /**
+     * Translate the model user to the grpc user data
+     * @param psnUser   User as model
+     * @return          User as grpc data
+     */
+    public static UserData userDataFromPsnUser(PsnUser psnUser) {
+        return UserData.newBuilder()
+                .setId(psnUser.getId())
+                .setUsername(psnUser.getUsername())
+                .setEmail(Optional.ofNullable(psnUser.getEmail()).orElse(""))
+                .setGivenName(Optional.ofNullable(psnUser.getGivenName()).orElse(""))
+                .setFamilyName(Optional.ofNullable(psnUser.getFamilyName()).orElse(""))
+                .setApproved(Optional.ofNullable(psnUser.getApproved()).orElse(false))
+                .setVerified(Optional.ofNullable(psnUser.getVerified()).orElse(false))
+                .setRequestsVerification(Optional.ofNullable(psnUser.getRequestsVerification()).orElse(false))
+                .addAllGroupMembership(Optional.ofNullable(psnUser.getGroupMembership()).orElse(Collections.emptyList())
+                        .stream()
+                        .map(userGroup -> UserGroupData.newBuilder()
+                                .setId(userGroup.getId().toString())
+                                .setGroupName(userGroup.getGroupName())
+                                .setNewUserDefault(userGroup.getNewUserDefault())
+                                .build())
+                        .toList())
                 .build();
     }
 }

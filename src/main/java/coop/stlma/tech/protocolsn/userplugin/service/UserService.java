@@ -1,7 +1,7 @@
 package coop.stlma.tech.protocolsn.userplugin.service;
 
-import coop.stlma.tech.protocolsn.registration.model.PsnUser;
-import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.model.PsnUser;
+import coop.stlma.tech.protocolsn.userplugin.model.UserQueryCriteria;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -24,8 +24,26 @@ public interface UserService {
 
     /**
      * Query the users based on a given set of criteria
-     * @param query     Query criteria
-     * @return          Users who meet the query criteria
+     * @param offset                start page
+     * @param limit                 number of records to retrieve
+     * @param approved              whether the user is approved
+     * @param verified              whether the user is verified
+     * @param requestsVerification  whether the user requests verification
+     * @param search                search string
+     * @return                      Users who meet the query criteria
+     */
+    Flux<PsnUser> queryUsers(
+            Integer offset,
+            Integer limit,
+            Boolean approved,
+            Boolean verified,
+            Boolean requestsVerification,
+            String search);
+
+    /**
+     * Query the users based on a given set of criteria
+     * @param query The query
+     * @return
      */
     Flux<PsnUser> queryUsers(UserQueryCriteria query);
 

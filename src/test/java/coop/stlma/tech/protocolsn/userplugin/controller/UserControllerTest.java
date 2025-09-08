@@ -1,8 +1,8 @@
 package coop.stlma.tech.protocolsn.userplugin.controller;
 
-import coop.stlma.tech.protocolsn.registration.api.UserOperations;
-import coop.stlma.tech.protocolsn.registration.model.PsnUser;
-import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.api.UserOperations;
+import coop.stlma.tech.protocolsn.userplugin.model.PsnUser;
+import coop.stlma.tech.protocolsn.userplugin.model.UserQueryCriteria;
 import coop.stlma.tech.protocolsn.userplugin.TestUtil;
 import coop.stlma.tech.protocolsn.userplugin.service.UserService;
 import io.micronaut.context.annotation.Primary;
@@ -67,7 +67,7 @@ class UserControllerTest {
 
     @Test
     void testQueryUsers_happyPath() {
-        UserQueryCriteria searchCritera = UserQueryCriteria.builder()
+        UserQueryCriteria searchCriteria = UserQueryCriteria.builder()
                 .limit(5)
                 .offset(9)
                 .approved(true)
@@ -81,7 +81,7 @@ class UserControllerTest {
         );
         Mockito.when(userServiceMock.queryUsers(captor.capture())).thenReturn(Flux.fromIterable(returnedUsers));
 
-        HttpRequest<?> request = HttpRequest.POST(UserOperations.QUERY_PATH, searchCritera)
+        HttpRequest<?> request = HttpRequest.POST(UserOperations.QUERY_PATH, searchCriteria)
                 .bearerAuth(TestUtil.getAdminUserAccessToken(httpClient));
 
         HttpResponse<List<PsnUser>> queryResponse = httpClient.toBlocking().exchange(request);

@@ -1,8 +1,8 @@
 package coop.stlma.tech.protocolsn.userplugin.controller;
 
-import coop.stlma.tech.protocolsn.registration.api.UserVerificationOperations;
-import coop.stlma.tech.protocolsn.registration.model.PsnUser;
-import coop.stlma.tech.protocolsn.registration.model.UserQueryCriteria;
+import coop.stlma.tech.protocolsn.userplugin.api.UserVerificationOperations;
+import coop.stlma.tech.protocolsn.userplugin.model.PsnUser;
+import coop.stlma.tech.protocolsn.userplugin.model.UserQueryCriteria;
 import coop.stlma.tech.protocolsn.userplugin.error.UserManagementException;
 import coop.stlma.tech.protocolsn.userplugin.service.UserService;
 import coop.stlma.tech.protocolsn.userplugin.service.UserVerificationService;

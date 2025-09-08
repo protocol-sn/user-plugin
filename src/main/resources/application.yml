@@ -74,7 +74,7 @@ coop:
 logger:
   levels:
     coop.stlma.tech.protocolsn: DEBUG
-    io.micronaut.security: DEBUG
+    io.micronaut.http: DEBUG
 
 grpc:
   server:
