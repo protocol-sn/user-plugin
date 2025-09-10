@@ -18,8 +18,6 @@ micronaut:
     services:
       keycloak-admin:
         url: http://localhost:9080/
-      node-manager::registration:
-        url: http://localhost:8080
   security:
     token:
       jwt:
