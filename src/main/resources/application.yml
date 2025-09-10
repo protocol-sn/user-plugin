@@ -79,3 +79,7 @@ logger:
 grpc:
   server:
     port: 8091
+  channels:
+    node-manager:
+      target: localhost:8090
+      plaintext: true

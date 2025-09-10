@@ -29,8 +29,8 @@ dependencies {
 
     //protocol-sn
     implementation("coop.stlma.tech.protocolsn:keycloak-api:0.3.3")
-    implementation("coop.stlma.tech.protocolsn:plugin-lib:0.5.0")
-    implementation("coop.stlma.tech.protocolsn:common-lib:0.5.0")
+    implementation("coop.stlma.tech.protocolsn:plugin-lib:0.5.1")
+    implementation("coop.stlma.tech.protocolsn:common-lib:0.5.1")
     implementation("coop.stlma.tech.protocolsn:user-plugin-api:0.5.0")
 
     //serde
