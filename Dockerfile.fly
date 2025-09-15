@@ -1,0 +1,10 @@
+FROM eclipse-temurin:21-jre
+WORKDIR /home/app
+
+ENV USER_PLUGIN_HOST=keycloak-user-plugin.flycast
+ENV USER_PLUGIN_GRPC_PORT=50051
+ENV NODE_MANAGER_HOST=http://node-manager.flycast:50051
+
+COPY --link build/libs/keycloak-user-plugin*-all.jar /home/app/application.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-Dmicronaut.environments=fly", "-jar", "/home/app/application.jar"]

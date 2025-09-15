@@ -16,12 +16,12 @@ micronaut:
       clients:
         local-keycloak:
           client-id: user-plugin
-          client-secret: user-plugin-secret
+          client-secret: ${USER_PLUGIN_CLIENT_SECRET}
           openid:
             issuer: http://${KEYCLOAK_HOST}/realms/social-network-ecosystem
         keycloak-client:
           client-id: user-plugin
-          client-secret: ${USER_PLUGIN_SECRET}
+          client-secret: ${USER_PLUGIN_CLIENT_SECRET}
           grant-type: client_credentials
           token:
             url: http://${KEYCLOAK_HOST}/realms/social-network-ecosystem/protocol/openid-connect/token
@@ -56,15 +56,10 @@ coop:
         plugin-host: ${USER_PLUGIN_HOST}
         plugin-grpc-port: ${USER_PLUGIN_GRPC_PORT}
 
-logger:
-  levels:
-    coop.stlma.tech.protocolsn: DEBUG
-    io.micronaut.http: DEBUG
-
 grpc:
   server:
     port: ${USER_PLUGIN_GRPC_PORT}
   channels:
     node-manager:
-      target: ${NODE_MANAGER_HOST}
+      address: ${NODE_MANAGER_HOST}
       plaintext: true
