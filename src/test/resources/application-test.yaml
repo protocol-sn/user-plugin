@@ -6,6 +6,8 @@ coop:
           on-startup: false
 
 micronaut:
+  server:
+    port: 0
   security:
     enabled: true
     authentication: bearer
