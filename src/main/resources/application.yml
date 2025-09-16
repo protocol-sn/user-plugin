@@ -40,7 +40,7 @@ micronaut:
             url: http://localhost:9080/realms/social-network-ecosystem/protocol/openid-connect/token
             auth-method: client_secret_post
           client-credentials:
-            service-id-regex: node-manager::registration|keycloak-admin
+            service-id-regex: keycloak-admin
           openid:
             issuer: http://localhost:9080/realms/social-network-ecosystem
     endpoints:
@@ -68,11 +68,6 @@ coop:
         plugin-name: ProtocolSNUserPlugin
         plugin-host: localhost
         plugin-grpc-port: 8091
-
-logger:
-  levels:
-    coop.stlma.tech.protocolsn: DEBUG
-    io.micronaut.http: DEBUG
 
 grpc:
   server:
