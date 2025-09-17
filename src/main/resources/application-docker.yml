@@ -1,6 +1,18 @@
 micronaut:
   server:
     port: 8080
+    context-path: /user
+  security:
+    oauth2:
+      clients:
+        keycloak:
+          openid:
+            issuer: http://keycloak:8080/realms/social-network-ecosystem
+        keycloak-client:
+          token:
+            url: http://keycloak:8080/realms/social-network-ecosystem/protocol/openid-connect/token
+          openid:
+            issuer: http://keycloak:8080/realms/social-network-ecosystem
 
 coop:
   stlma:
