@@ -1,14 +1,25 @@
 micronaut:
   server:
     port: 8080
+    context-path: /user
+  security:
+    oauth2:
+      clients:
+        keycloak:
+          openid:
+            issuer: http://keycloak:8080/realms/social-network-ecosystem
+        keycloak-client:
+          token:
+            url: http://keycloak:8080/realms/social-network-ecosystem/protocol/openid-connect/token
+          openid:
+            issuer: http://keycloak:8080/realms/social-network-ecosystem
 
 coop:
   stlma:
     tech:
       protocolsn:
         plugin-name: ProtocolSNUserPlugin
-        plugin-host: psn-user-plugin
-        plugin-grpc-port: 50051
+        plugin-target: psn-user-plugin:50051
 
 grpc:
   server:
