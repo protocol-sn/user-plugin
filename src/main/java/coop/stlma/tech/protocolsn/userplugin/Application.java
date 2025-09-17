@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 
 @OpenAPIDefinition(info = @Info(
         title = "Protocol SN user plugin",
-        version = "0.3.0"
+        version = "0.5.0"
 ))
 @SecuritySchemes(
         @SecurityScheme(
