@@ -1,6 +1,7 @@
 micronaut:
   server:
     port: 8080
+    context-path: /user
   http:
     services:
       keycloak-admin:
@@ -15,46 +16,24 @@ micronaut:
     oauth2:
       clients:
         local-keycloak:
-          client-id: user-plugin
           client-secret: ${USER_PLUGIN_CLIENT_SECRET}
           openid:
             issuer: http://${KEYCLOAK_HOST}/realms/social-network-ecosystem
         keycloak-client:
-          client-id: user-plugin
           client-secret: ${USER_PLUGIN_CLIENT_SECRET}
-          grant-type: client_credentials
           token:
             url: http://${KEYCLOAK_HOST}/realms/social-network-ecosystem/protocol/openid-connect/token
-            auth-method: client_secret_post
           client-credentials:
-            service-id-regex: node-manager::registration|keycloak-admin
+            service-id-regex: keycloak-admin
           openid:
             issuer: http://${KEYCLOAK_HOST}/realms/social-network-ecosystem
-    endpoints:
-      logout:
-        get-allowed: true
-    authentication: bearer
-    intercept-url-map:
-      - pattern: /favicon.ico
-        httpMethod: GET
-        access:
-          - isAnonymous()
-      - pattern: /swagger/**
-        httpMethod: GET
-        access:
-          - isAnonymous()
-      - pattern: /swagger-ui/**
-        httpMethod: GET
-        access:
-          - isAnonymous()
 
 coop:
   stlma:
     tech:
       protocolsn:
         plugin-name: ProtocolSNUserPlugin
-        plugin-host: ${USER_PLUGIN_HOST}
-        plugin-grpc-port: ${USER_PLUGIN_GRPC_PORT}
+        plugin-target: dns:///${USER_PLUGIN_HOST}:${USER_PLUGIN_GRPC_PORT}
 
 grpc:
   server:

@@ -19,7 +19,7 @@ coop:
     tech:
       protocolsn:
         plugin-name: ProtocolSNUserPlugin
-        plugin-target: psn-user-plugin:50051
+        plugin-target: dns:///psn-user-plugin:50051
 
 grpc:
   server:
