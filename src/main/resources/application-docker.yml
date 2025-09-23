@@ -8,11 +8,6 @@ micronaut:
         keycloak:
           openid:
             issuer: http://localhost:5005/realms/social-network-ecosystem
-        keycloak-client:
-          token:
-            url: http://localhost:5005/realms/social-network-ecosystem/protocol/openid-connect/token
-          openid:
-            issuer: http://localhost:5005/realms/social-network-ecosystem
 
 coop:
   stlma:
