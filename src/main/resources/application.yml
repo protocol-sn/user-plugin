@@ -27,7 +27,7 @@ micronaut:
               url: http://localhost:9080/realms/social-network-ecosystem/protocol/openid-connect/certs
     oauth2:
       clients:
-        local-keycloak:
+        keycloak:
           client-id: user-plugin
           client-secret: user-plugin-secret
           openid:
@@ -46,7 +46,7 @@ micronaut:
     endpoints:
       logout:
         get-allowed: true
-    authentication: bearer
+    authentication: idtoken
     intercept-url-map:
       - pattern: /favicon.ico
         httpMethod: GET
