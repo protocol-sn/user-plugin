@@ -7,26 +7,12 @@ micronaut:
       keycloak-admin:
         url: http://${KEYCLOAK_HOST}/
   security:
-    token:
-      jwt:
-        signatures:
-          jwks:
-            keycloak:
-              url: http://${KEYCLOAK_HOST}/realms/social-network-ecosystem/protocol/openid-connect/certs
     oauth2:
       clients:
-        local-keycloak:
+        keycloak:
           client-secret: ${USER_PLUGIN_CLIENT_SECRET}
           openid:
-            issuer: http://${KEYCLOAK_HOST}/realms/social-network-ecosystem
-        keycloak-client:
-          client-secret: ${USER_PLUGIN_CLIENT_SECRET}
-          token:
-            url: http://${KEYCLOAK_HOST}/realms/social-network-ecosystem/protocol/openid-connect/token
-          client-credentials:
-            service-id-regex: keycloak-admin
-          openid:
-            issuer: http://${KEYCLOAK_HOST}/realms/social-network-ecosystem
+            issuer: https://${KEYCLOAK_HOST}/realms/social-network-ecosystem
 
 coop:
   stlma:
