@@ -20,7 +20,6 @@ import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -31,7 +30,6 @@ import java.util.List;
 import java.util.UUID;
 
 @MicronautTest
-@Disabled("Some updates broke the auth in tests. Fix later")
 class UserVerificationControllerTest {
     public static final UUID USER_ID = UUID.nameUUIDFromBytes("controllerVerifyUserId".getBytes());
 

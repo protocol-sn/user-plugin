@@ -17,7 +17,6 @@ import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -31,7 +30,6 @@ import java.util.UUID;
 import static coop.stlma.tech.protocolsn.userplugin.AuthProviderCreds.TEST_USER_ID;
 
 @MicronautTest
-@Disabled("Some updates broke the auth in tests. Fix later")
 class UserControllerTest {
 
     public static UUID userId = UUID.nameUUIDFromBytes("controllerUserId".getBytes());

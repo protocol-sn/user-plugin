@@ -14,17 +14,6 @@ micronaut:
       swagger-ui:
         mapping: /swagger-ui/**
         paths: classpath:META-INF/swagger/views/swagger-ui
-    oauth2:
-      clients:
-        keycloak:
-          client-id: user-plugin
-          client-secret: user-plugin-secret
-          openid:
-            issuer: http://localhost:9080/realms/social-network-ecosystem
-    endpoints:
-      logout:
-        get-allowed: true
-    authentication: idtoken
     intercept-url-map:
       - pattern: /favicon.ico
         httpMethod: GET
