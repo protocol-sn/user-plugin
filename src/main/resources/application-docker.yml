@@ -7,7 +7,7 @@ micronaut:
       clients:
         keycloak:
           openid:
-            issuer: http://localhost:5005/realms/social-network-ecosystem
+            issuer: http://keycloak.psn.local:5005/realms/social-network-ecosystem
 
 coop:
   stlma:
@@ -23,3 +23,7 @@ grpc:
     node-manager:
       target: psn-node-manager:50051
       plaintext: true
+logger:
+  levels:
+    io.micronaut.security: TRACE
+    io.micronaut.http: TRACE
